@@ -1,0 +1,38 @@
+Members:
+    - Zachary Lohner (zslohner@gmail.com)
+    - Christopher Bradshaw (christopherbaxterbradshaw@gmail.com)
+    - Matthew Rollins (rollins.matthew.s@gmail.com)
+
+Requirements:
+
+- Node.js for back end
+- MongoDB
+- RESTful API
+- React for front end
+
+1. Administrator
+    - Control panel interface (GUI survey builder)
+    - Two Query interfaces
+        - General Stats
+        - Specific Detail
+2. Users
+    - Response interface
+    - Mobile friendly
+3. Surveys
+    - Generate Short links
+    - Types of Entry
+        - Normal text, some w/ validation
+        - Radio & Checkbox
+        - Grid
+        - Sliders (Range)
+        - Dropdown
+4. Database
+    - Collections
+        - Users
+            - type (Admin or Regular)
+        - Surveys
+        - Responses
+
+5. Other
+    - One git repo
+    - Shell script to install dependencies
