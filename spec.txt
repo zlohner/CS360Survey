@@ -1,6 +1,5 @@
 Members:
     - Zachary Lohner (zslohner@gmail.com)
-    - Christopher Bradshaw (christopherbaxterbradshaw@gmail.com)
     - Matthew Rollins (rollins.matthew.s@gmail.com)
 
 Requirements:

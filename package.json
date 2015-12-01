@@ -1,0 +1,19 @@
+{
+  "name": "cs360survey",
+  "version": "1.0.0",
+  "description": "Survey App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zlohner/CS360Survey.git"
+  },
+  "author": "Zachary Lohner & Matthew Rollins",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/zlohner/CS360Survey/issues"
+  },
+  "homepage": "https://github.com/zlohner/CS360Survey#readme"
+}
