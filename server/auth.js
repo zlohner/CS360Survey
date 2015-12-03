@@ -1,25 +1,38 @@
-module.exports = {
-	hasPermission: function(req) {
-		retrieveAuth(req)
+var db = require('./db.js')
 
-		if (req.auth.test) {
-			return true
-		} else {
-			return false
-		}
-	},
-	login: function(res, account) {
-		res.cookie('auth', '12345')
+
+module.exports = function(req, res, next) {
+	if (req.cookies.auth) {
+		db.collection('accounts').findOne({
+			token: req.cookies.auth
+		}, function(err, account) {
+			if (err)
+				res.status(500).send()
+			else if (!account) {
+				res.cookie('auth', '')
+				res.cookie('username', '')
+				req.auth = new AuthHandler({})
+				next()
+			} else {
+				req.auth = new AuthHandler(account)
+				next()
+			}
+		})
+	} else {
+		req.auth = new AuthHandler({})
+		next()
 	}
 }
 
 
-function retrieveAuth(req) {
-	if (!req.auth) {
-		if (req.cookies.auth) {
-			// verify auth...
-			req.auth = {}
-		} else
-			req.auth = {}
-	}
+
+function AuthHandler(account) {
+	this._account = account
+}
+
+AuthHandler.prototype.mustBeLoggedIn = function(res, cb) {
+	if (this._account._id)
+		cb(this._account._id)
+	else
+		res.status(403).send()
 }
