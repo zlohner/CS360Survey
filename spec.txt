@@ -9,7 +9,7 @@ Requirements:
 - RESTful API
 - React for front end
 
-1. Administrator
+1. Organizations
     - Control panel interface (GUI survey builder)
     - Two Query interfaces
         - General Stats
