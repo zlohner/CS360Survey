@@ -25,10 +25,10 @@ endpoints.forEach(function(name) {
 
 
 // connect to mongo
-// require('./server/db.js').init(function(err) {
-// 	if (err) {
-// 		console.log('ERROR CONNECTING TO THE DATABASE!')
-// 		process.exit()
-// 	} else
-// 		console.log('Connected to the database.')
-// })
+require('./server/db.js').init(function(err) {
+	if (err) {
+		console.log('ERROR CONNECTING TO THE DATABASE!')
+		process.exit()
+	} else
+		console.log('Connected to the database.')
+})
