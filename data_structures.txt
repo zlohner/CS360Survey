@@ -1,0 +1,48 @@
+Survey
+{
+	_id: 12345,
+	owner: '',
+	published: false,
+	closed: false,
+	name: 'A Quick Questionaire',
+	questions: [
+		{
+			type: 'text',
+			prompt: 'What is your name?'
+		},
+		{
+			type: 'number',
+			prompt: 'How old are you?'
+		},
+		{
+			type: 'grid',
+			prompt: 'Please rate the following foods:',
+			columns: [
+				'EW GROSS', 'meh', 'pretty good', 'fantastic'
+			],
+			rows: [
+				'burgers', 'fries', 'chicken teriyaki'
+			]
+		}
+	]
+}
+
+Response
+{
+	_id: 12345,
+	survey: 12345,
+	timestamp: '12/2/2015 20:40:00',
+	data: [
+		'Bob',
+		34,
+		[2, 3, 0]
+	]
+}
+
+Accounts
+{
+	_id: 12345,
+	name: 'bobsurvey',
+	pass: '0100501509745098',
+	token: '12341235'
+}

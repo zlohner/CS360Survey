@@ -17,7 +17,7 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(require('./server/auth.js'))
 app.use(require('./server/params.js'))
-var endpoints = ['account', 'survey']
+var endpoints = ['account', 'response', 'survey']
 endpoints.forEach(function(name) {
 	var loader = require('./server/'+name+'.js')
 	loader(app)
@@ -25,10 +25,10 @@ endpoints.forEach(function(name) {
 
 
 // connect to mongo
-require('./server/db.js').init(function(err) {
-	if (err) {
-		console.log('ERROR CONNECTING TO THE DATABASE!')
-		process.exit()
-	} else
-		console.log('Connected to the database.')
-})
+// require('./server/db.js').init(function(err) {
+// 	if (err) {
+// 		console.log('ERROR CONNECTING TO THE DATABASE!')
+// 		process.exit()
+// 	} else
+// 		console.log('Connected to the database.')
+// })

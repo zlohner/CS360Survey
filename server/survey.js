@@ -1,4 +1,4 @@
-var auth = require('./auth.js')
+var db = require('./db.js')
 
 module.exports = function(app) {
 	app.get('/api/survey', GetSurveysForAccount)	// uses currently logged in account
@@ -6,6 +6,9 @@ module.exports = function(app) {
 	app.post('/api/survey', CreateSurvey)
 	app.put('/api/survey/:id', UpdateSurvey)
 	app.delete('/api/survey/:id', DeleteSurvey)
+
+	app.post('/api/survey/open/:id', OpenSurvey)	// start accepting responses
+	app.post('/api/survey/close/:id', CloseSurvey)	// stop accepting responses
 }
 
 
@@ -78,12 +81,14 @@ function UpdateSurvey(req, res) {
 
 			req.params.id = db.id.createFromHexString(req.params.id)
 
-			_checkSurveyOwner(req.params.id, accountID, function(err, isOwner) {
+			_checkSurveyOwner(req.params.id, accountID, function(err, isOwner, published) {
 
 				if (err)
 					res.status(404).send()
 				else if (!isOwner)
 					res.status(403).send()
+				else if (published)
+					res.status(400).send('Cannot edit published surveys.')
 				else {
 					db.collection('surveys').updateOne({
 						_id: req.params.id
@@ -118,8 +123,83 @@ function DeleteSurvey(req, res) {
 			else if (!isOwner)
 				res.status(403).send()
 			else {
-				db.collection('surveys').deleteOne({
-					_id: req.params.id
+				// also delete all responses
+				db.collection('responses').deleteMany({
+					survey: req.params.id
+				}, function(err) {
+
+					if (err)
+						res.status(500).send()
+					else {
+						db.collection('surveys').deleteOne({
+							_id: req.params.id
+						}, function(err) {
+
+							if (err)
+								res.status(500).send()
+							else
+								res.status(200).send()
+
+						})		
+					}
+
+				})
+			}
+
+		})
+
+	})
+}
+function OpenSurvey(req, res) {
+	req.auth.mustBeLoggedIn(res, function(accountID) {
+
+		var surveyID = db.id.createFromHexString(req.params.id)
+		_checkSurveyOwner(surveyID, accountID, function(err, isOwner) {
+
+			if (err)
+				res.status(404).send()
+			else if (!isOwner)
+				res.status(403).send()
+			else {
+				db.collection('surveys').updateOne({
+					_id: surveyID
+				}, {
+					'$set': {
+						published: true,
+						closed: false
+					}
+				}, function(err) {
+
+					if (err)
+						res.status(500).send()
+					else
+						res.status(200).send()
+
+				})
+			}
+
+		})
+
+	})
+}
+function CloseSurvey(req, res) {
+	req.auth.mustBeLoggedIn(res, function(accountID) {
+
+		var surveyID = db.id.createFromHexString(req.params.id)
+		_checkSurveyOwner(surveyID, accountID, function(err, isOwner) {
+
+			if (err)
+				res.status(404).send()
+			else if (!isOwner)
+				res.status(403).send()
+			else {
+				db.collection('surveys').updateOne({
+					_id: surveyID
+				}, {
+					'$set': {
+						published: true,
+						closed: true
+					}
 				}, function(err) {
 
 					if (err)
@@ -141,13 +221,14 @@ function _checkSurveyOwner(surveyID, ownerID, cb) {
 	db.collection('surveys').findOne({
 		_id: surveyID
 	}, {
-		ownerID: 1
+		ownerID: 1,
+		published: 1
 	}, function(err, doc) {
 
 		if (err || !doc)
 			cb('ERROR')
 		else
-			cb(null, (doc.ownerID.equals(ownerID)))
+			cb(null, (doc.ownerID.equals(ownerID)), doc.published)
 
 	})
 }
