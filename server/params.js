@@ -31,6 +31,9 @@ function validateScheme(data, scheme, cb) {
 			case 'string':
 				valid = (typeof(data[key]) == 'string')
 				break
+			case 'array':
+				valid = (Array.isArray(data[key]))
+				break
 			default:
 				valid = false
 			}

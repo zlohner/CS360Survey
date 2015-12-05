@@ -1,7 +1,7 @@
 Members:
     - Zachary Lohner (zslohner@gmail.com)
     - Matthew Rollins (rollins.matthew.s@gmail.com)
-
+    - Christopher Bradshaw (christopherbaxterbradshaw@gmail.com) 
 Requirements:
 
 - Node.js for back end

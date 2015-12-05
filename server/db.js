@@ -10,7 +10,10 @@ module.exports = {
 	init: function(cb) {
 		if (db == null) {
 			mongo.MongoClient.connect('mongodb://localhost:27017/cs360survey', function(err, newDB) {
-				db = newDB
+				if (newDB) {
+					db = newDB
+					db.id = mongo.ObjectID
+				}
 				cb(err)
 			})
 		}

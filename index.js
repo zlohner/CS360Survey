@@ -17,7 +17,7 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(require('./server/auth.js'))
 app.use(require('./server/params.js'))
-var endpoints = ['account', 'survey']
+var endpoints = ['account', 'response', 'survey']
 endpoints.forEach(function(name) {
 	var loader = require('./server/'+name+'.js')
 	loader(app)
