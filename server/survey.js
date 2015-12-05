@@ -6,7 +6,9 @@ module.exports = function(app) {
 	app.post('/api/survey', CreateSurvey)
 	app.put('/api/survey/:id', UpdateSurvey)
 	app.delete('/api/survey/:id', DeleteSurvey)
-	// todo: function to publish / close a survey
+
+	app.post('/api/survey/open/:id', OpenSurvey)	// start accepting responses
+	app.post('/api/survey/close/:id', CloseSurvey)	// stop accepting responses
 }
 
 
@@ -140,6 +142,70 @@ function DeleteSurvey(req, res) {
 
 						})		
 					}
+
+				})
+			}
+
+		})
+
+	})
+}
+function OpenSurvey(req, res) {
+	req.auth.mustBeLoggedIn(res, function(accountID) {
+
+		var surveyID = db.id.createFromHexString(req.params.id)
+		_checkSurveyOwner(surveyID, accountID, function(err, isOwner) {
+
+			if (err)
+				res.status(404).send()
+			else if (!isOwner)
+				res.status(403).send()
+			else {
+				db.collection('surveys').updateOne({
+					_id: surveyID
+				}, {
+					'$set': {
+						published: true,
+						closed: false
+					}
+				}, function(err) {
+
+					if (err)
+						res.status(500).send()
+					else
+						res.status(200).send()
+
+				})
+			}
+
+		})
+
+	})
+}
+function CloseSurvey(req, res) {
+	req.auth.mustBeLoggedIn(res, function(accountID) {
+
+		var surveyID = db.id.createFromHexString(req.params.id)
+		_checkSurveyOwner(surveyID, accountID, function(err, isOwner) {
+
+			if (err)
+				res.status(404).send()
+			else if (!isOwner)
+				res.status(403).send()
+			else {
+				db.collection('surveys').updateOne({
+					_id: surveyID
+				}, {
+					'$set': {
+						published: true,
+						closed: true
+					}
+				}, function(err) {
+
+					if (err)
+						res.status(500).send()
+					else
+						res.status(200).send()
 
 				})
 			}
