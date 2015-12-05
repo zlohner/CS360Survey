@@ -2,7 +2,7 @@ var Router = ReactRouter.Router;
 var Link = ReactRouter.Link;
 var Route = ReactRouter.Route;
 
-location.href='#home' 
+location.href='#home'
 
 var App = React.createClass({
 	render: function() {
@@ -17,7 +17,7 @@ var App = React.createClass({
 								<span className="icon-bar"></span>
 								<span className="icon-bar"></span>
 							</button>
-                            <a className="navbar-brand" href="#home">Survey</a>
+							<a className="navbar-brand" href="#home">Survey</a>
 						</div>
 						<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 							<ul className="nav navbar-nav">
@@ -64,19 +64,19 @@ var Account = React.createClass({
 	render: function() {
 		return (
 			<div className="col-lg-10 col-md-10 col-sm-10 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
-								<center><h1>Account Registration</h1></center>
-								<form className="form-group col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" id="registerForm">
-										<label htmlFor="user">Username:</label>
-										<input type="text" className="form-control registerElement" placeholder="username" id="user"/>
+				<center><h1>Account Registration</h1></center>
+				<form className="form-group col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" id="registerForm">
+					<label htmlFor="user">Username:</label>
+					<input type="text" className="form-control registerElement" placeholder="username" id="user"/>
 
-										<label htmlFor="pass">Password:</label>
-										<input type="password" className="form-control registerElement" placeholder="password" id="pass"/>
+					<label htmlFor="pass">Password:</label>
+					<input type="password" className="form-control registerElement" placeholder="password" id="pass"/>
 
-										<label htmlFor="passConfirm">Confirm Password:</label>
-										<input type="password" className="form-control registerElement" placeholder="password again" id="passConfirm"/>
+					<label htmlFor="passConfirm">Confirm Password:</label>
+					<input type="password" className="form-control registerElement" placeholder="password again" id="passConfirm"/>
 
-										<input type="submit" className="btn btn-success" value="Sign Up"/>
-								</form>
+					<input type="submit" className="btn btn-success" value="Sign Up"/>
+				</form>
 			</div>
 		);
 	}
