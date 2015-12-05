@@ -1,4 +1,4 @@
-var auth = require('./auth.js')
+var db = require('./db.js')
 
 module.exports = function(app) {
 	app.get('/api/survey', GetSurveysForAccount)	// uses currently logged in account
@@ -6,6 +6,7 @@ module.exports = function(app) {
 	app.post('/api/survey', CreateSurvey)
 	app.put('/api/survey/:id', UpdateSurvey)
 	app.delete('/api/survey/:id', DeleteSurvey)
+	// todo: function to publish / close a survey
 }
 
 
