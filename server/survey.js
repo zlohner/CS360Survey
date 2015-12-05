@@ -78,12 +78,14 @@ function UpdateSurvey(req, res) {
 
 			req.params.id = db.id.createFromHexString(req.params.id)
 
-			_checkSurveyOwner(req.params.id, accountID, function(err, isOwner) {
+			_checkSurveyOwner(req.params.id, accountID, function(err, isOwner, published) {
 
 				if (err)
 					res.status(404).send()
 				else if (!isOwner)
 					res.status(403).send()
+				else if (published)
+					res.status(400).send('Cannot edit published surveys.')
 				else {
 					db.collection('surveys').updateOne({
 						_id: req.params.id
@@ -118,14 +120,25 @@ function DeleteSurvey(req, res) {
 			else if (!isOwner)
 				res.status(403).send()
 			else {
-				db.collection('surveys').deleteOne({
-					_id: req.params.id
+				// also delete all responses
+				db.collection('responses').deleteMany({
+					survey: req.params.id
 				}, function(err) {
 
 					if (err)
 						res.status(500).send()
-					else
-						res.status(200).send()
+					else {
+						db.collection('surveys').deleteOne({
+							_id: req.params.id
+						}, function(err) {
+
+							if (err)
+								res.status(500).send()
+							else
+								res.status(200).send()
+
+						})		
+					}
 
 				})
 			}
@@ -141,13 +154,14 @@ function _checkSurveyOwner(surveyID, ownerID, cb) {
 	db.collection('surveys').findOne({
 		_id: surveyID
 	}, {
-		ownerID: 1
+		ownerID: 1,
+		published: 1
 	}, function(err, doc) {
 
 		if (err || !doc)
 			cb('ERROR')
 		else
-			cb(null, (doc.ownerID.equals(ownerID)))
+			cb(null, (doc.ownerID.equals(ownerID)), doc.published)
 
 	})
 }
