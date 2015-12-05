@@ -2,6 +2,8 @@ var Router = ReactRouter.Router;
 var Link = ReactRouter.Link;
 var Route = ReactRouter.Route;
 
+location.href='#home' 
+
 var App = React.createClass({
 	render: function() {
 		return (
