@@ -98,9 +98,9 @@ var routes = (
 ReactDOM.render(routes, document.body);
 
 $("#registerForm").submit(function(e) {
-		e.preventDefault()
-		var user = $('#user').val()
-		var pass = $('#pass').val()
-		var pass2 = $('#passConfirm').val()
-		alert(user + " " + pass + " " + pass2)
+	e.preventDefault()
+	var user = $('#user').val()
+	var pass = $('#pass').val()
+	var pass2 = $('#passConfirm').val()
+	alert(user + " " + pass + " " + pass2)
 });
