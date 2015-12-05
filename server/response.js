@@ -24,7 +24,7 @@ function SubmitResponse(req, res) {
 			else {
 				db.collection('responses').insertOne({
 					survey: req.params.survey,
-					timestamp: '',
+					timestamp: Date(),
 					data: params.data
 				}, function(err) {
 

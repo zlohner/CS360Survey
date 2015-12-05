@@ -3,7 +3,8 @@ var bcrypt = require('bcrypt')
 var uuid = require('uuid')
 
 module.exports = function(app) {
-	app.get('/api/account', Login)
+	app.post('/api/account/login', Login)
+
 	app.post('/api/account', CreateNewAccount)
 	app.put('/api/account', UpdateAccount)	// uses currently logged in account
 	app.delete('/api/account', DeleteAccount)	// uses currently logged in account
@@ -104,6 +105,7 @@ function UpdateAccount(req, res) {
 }
 function DeleteAccount(req, res) {
 	req.auth.mustBeLoggedIn(res, function(accountID) {
+		// TODO: delete surveys and responses for this account
 		db.collection('accounts').deleteOne({
 			_id: accountID
 		}, function(err) {
