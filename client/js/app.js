@@ -64,19 +64,19 @@ var Account = React.createClass({
 	render: function() {
 		return (
 			<div className="col-lg-10 col-md-10 col-sm-10 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
-                <center><h1>Account Registration</h1></center>
-                <form className="form-group col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" id="registerForm">
-                    <label htmlFor="user">Username:</label>
-                    <input type="text" className="form-control registerElement" placeholder="username" id="user"/>
+								<center><h1>Account Registration</h1></center>
+								<form className="form-group col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" id="registerForm">
+										<label htmlFor="user">Username:</label>
+										<input type="text" className="form-control registerElement" placeholder="username" id="user"/>
 
-                    <label htmlFor="pass">Password:</label>
-                    <input type="password" className="form-control registerElement" placeholder="password" id="pass"/>
+										<label htmlFor="pass">Password:</label>
+										<input type="password" className="form-control registerElement" placeholder="password" id="pass"/>
 
-                    <label htmlFor="passConfirm">Confirm Password:</label>
-                    <input type="password" className="form-control registerElement" placeholder="password again" id="passConfirm"/> 
-                    
-                    <input type="submit" className="btn btn-success" value="Sign Up"/>
-                </form> 
+										<label htmlFor="passConfirm">Confirm Password:</label>
+										<input type="password" className="form-control registerElement" placeholder="password again" id="passConfirm"/>
+
+										<input type="submit" className="btn btn-success" value="Sign Up"/>
+								</form>
 			</div>
 		);
 	}
@@ -98,10 +98,9 @@ var routes = (
 ReactDOM.render(routes, document.body);
 
 $("#registerForm").submit(function(e) {
-    e.preventDefault()
-    var user = $('#user').val()
-    var pass = $('#pass').val() 
-    var pass2 = $('#passConfirm').val() 
-    alert(user + " " + pass + " " + pass2)
-}); 
-
+		e.preventDefault()
+		var user = $('#user').val()
+		var pass = $('#pass').val()
+		var pass2 = $('#passConfirm').val()
+		alert(user + " " + pass + " " + pass2)
+});
