@@ -56,7 +56,7 @@ var Create = React.createClass({
 	}
 });
 
-var registerErrorMessage = '';
+var registerErrorHtml = '<strong>Oops!<br/></strong>'; 
 
 var Account = React.createClass({
 	render: function() {
@@ -74,27 +74,51 @@ var Account = React.createClass({
 					<input type="password" className="form-control registerElement" placeholder="password again" id="passConfirm"/>
 
 					<input type="submit" className="btn btn-success" value="Sign Up"/>
-                    <br/>     
-                <div className="alert-danger" id="errorMessage">
-                </div> 
-
+                     
+                    <div className="alert-danger" id="errorMessage"></div>  
 				</form>
 			</div>
 		);
+    },
+    clearErrors: function() {
+        $('#errorMessage').hide(); 
+        $('#errorMessage').html('<strong>Oops!</strong><br/>');
+    }, 
+    appendError: function(newMsg) {
+        $('#errorMessage').html($('#errorMessage').html()+newMsg+'<br/>');  
+        $('#errorMessage').show();  
+    }, 
+    componentDidMount: function() {
+        this.clearErrors(); 
+        $('#user').focus(); 
     }, 
     onSubmit:function(e) {
         e.preventDefault();
+        this.clearErrors(); 
         var user = $('#user').val();
         var pass1 = $('#pass').val();
         var pass2 = $('#passConfirm').val(); 
-        //Todo: Add case for existing user 
+        var errors = false; 
+        $('#user,#pass, #passConfirm').removeClass('alert-danger');
+
         if (pass1 != pass2) {
             $('#pass, #passConfirm').addClass('alert-danger').val('');
-            $('#errorMessage').html('Passwords don\'t match');
-        } else if (pass1.length == 0 || user.length == 0) {
+            $('#pass').focus(); 
+            this.appendError('Passwords do not match'); 
+            errors = true; 
+        } 
+        if (pass1.length == 0) {
             $('#pass, #passConfirm').addClass('alert-danger').val('');
-            $('#errorMessage').html('Fields  can\'t be empty');
-        } else {
+            this.appendError('Password cannot be empty');
+            errors = true; 
+        }
+        if (user.length == 0) {
+            $('#user').addClass('alert-danger');
+            this.appendError('Username cannot be empty');
+            $('#user').focus();
+            errors = true; 
+        } 
+        if (!errors)    {
             $('#user,#pass, #passConfirm').removeClass('alert-danger');
             $.ajax({
                 url: '/api/account',
@@ -113,8 +137,10 @@ var Account = React.createClass({
                             break; 
                         
                         case 409:
+                            $('#user').focus();
                             $('#user').addClass('alert-danger'); 
-                            $('#errorMessage').html('User already exists');
+                            $('#errorMessage').html($('#errorMessage').html()+'Username already in use<br/>');  
+                            $('#errorMessage').show();  
                             break; 
                     }
                     
