@@ -2,7 +2,6 @@ var Router = ReactRouter.Router;
 var Link = ReactRouter.Link;
 var Route = ReactRouter.Route;
 
-//location.href='#home'
 var App = React.createClass({
 	render: function() {
 		return (
@@ -57,6 +56,8 @@ var Create = React.createClass({
 	}
 });
 
+var registerErrorMessage = '';
+
 var Account = React.createClass({
 	render: function() {
 		return (
@@ -73,6 +74,10 @@ var Account = React.createClass({
 					<input type="password" className="form-control registerElement" placeholder="password again" id="passConfirm"/>
 
 					<input type="submit" className="btn btn-success" value="Sign Up"/>
+                    <br/>     
+                <div className="alert-danger" id="errorMessage">
+                </div> 
+
 				</form>
 			</div>
 		);
@@ -82,14 +87,15 @@ var Account = React.createClass({
         var user = $('#user').val();
         var pass1 = $('#pass').val();
         var pass2 = $('#passConfirm').val(); 
+        //Todo: Add case for existing user 
         if (pass1 != pass2) {
-            $('#pass, #passConfirm').addClass("alert-danger").val('');
-            alert("Passwords don't match"); 
-        } else if (pass1.length == 0) {
-            $('#pass, #passConfirm').addClass("alert-danger").val('');
-            alert("Password cannot be empty");
+            $('#pass, #passConfirm').addClass('alert-danger').val('');
+            $('#errorMessage').html('Passwords don\'t match');
+        } else if (pass1.length == 0 || user.length == 0) {
+            $('#pass, #passConfirm').addClass('alert-danger').val('');
+            $('#errorMessage').html('Fields  can\'t be empty');
         } else {
-            $('#user,#pass, #passConfirm').removeClass("alert-danger");
+            $('#user,#pass, #passConfirm').removeClass('alert-danger');
             $.ajax({
                 url: '/api/account',
                 dataType: 'json',
@@ -97,9 +103,24 @@ var Account = React.createClass({
                 data: {
                     username: user,
                     password: pass1
+                },
+                complete: function(xhr, statusText){
+                    var statusCode = xhr.status; 
+                    switch(statusCode) {
+                        case 200:
+                            //Redirect to home for now
+                            location.href='#home';  
+                            break; 
+                        
+                        case 409:
+                            $('#user').addClass('alert-danger'); 
+                            $('#errorMessage').html('User already exists');
+                            break; 
+                    }
+                    
+                
                 }
-            }); 
-            alert("created");
+                }); 
         } 
     } 
 
