@@ -1,0 +1,9 @@
+.registerElement {
+		margin-bottom:15px;
+}
+
+#errorMessage {
+		margin-top:15px;
+		padding:15px;
+		border-radius:5px; 
+}

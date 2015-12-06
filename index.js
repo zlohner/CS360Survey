@@ -6,7 +6,8 @@ var fs = require('fs')
 
 // start the server
 var app = express()
-app.use(express.static('client'))
+// app.use(express.static('client'))
+app.use(express.static('public'))
 app.listen(80, function() {
 	console.log('Listening on port 80.')
 })
@@ -14,6 +15,7 @@ app.listen(80, function() {
 
 // load all api endpoints
 app.use(cookieParser())
+app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 app.use(require('./server/auth.js'))
 app.use(require('./server/params.js'))

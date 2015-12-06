@@ -50,29 +50,30 @@ function CreateNewAccount(req, res) {
 
 		params.username = params.username.toLowerCase()
 
-		_checkUsernameExists(username, function(err, exists) {
+		_checkUsernameExists(params.username, function(err, exists) {
 
 			if (err)
 				res.status(500).send()
 			else if (exists)
 				res.status(409).send('Username is in use.')
 			else {
-				var token = _generateToken()
-				_hashPassword(rawPassword, function(err, hash) {
-					if (err)
-						res.status(500).send()
-					else {
-						db.collection('accounts').insertOne({
-							username: username,
-							password: hash,
-							token: token
-						}, function(err) {
-							if (err)
-								res.status(500).send()
-							else
-								res.status(200).send()
-						})
-					}
+				_generateToken(function(token) {
+					_hashPassword(params.password, function(err, hash) {
+						if (err)
+							res.status(500).send()
+						else {
+							db.collection('accounts').insertOne({
+								username: params.username,
+								password: hash,
+								token: token
+							}, function(err) {
+								if (err)
+									res.status(500).send()
+								else
+									res.status(200).send()
+							})
+						}
+					})
 				})
 			}
 
