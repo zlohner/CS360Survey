@@ -2,8 +2,7 @@ var Router = ReactRouter.Router;
 var Link = ReactRouter.Link;
 var Route = ReactRouter.Route;
 
-location.href='#home'
-
+//location.href='#home'
 var App = React.createClass({
 	render: function() {
 		return (
@@ -22,8 +21,6 @@ var App = React.createClass({
 						<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 							<ul className="nav navbar-nav">
 								<li><Link to="create">create</Link></li>
-							</ul>
-							<ul className="nav navbar-nav">
 								<li><Link to="account">account</Link></li>
 							</ul>
 						</div>
@@ -65,7 +62,7 @@ var Account = React.createClass({
 		return (
 			<div className="col-lg-10 col-md-10 col-sm-10 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
 				<center><h1>Account Registration</h1></center>
-				<form className="form-group col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" id="registerForm">
+				<form className="form-group col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" id="registerForm" onSubmit={this.onSubmit}>
 					<label htmlFor="user">Username:</label>
 					<input type="text" className="form-control registerElement" placeholder="username" id="user"/>
 
@@ -79,7 +76,33 @@ var Account = React.createClass({
 				</form>
 			</div>
 		);
-	}
+    }, 
+    onSubmit:function(e) {
+        e.preventDefault();
+        var user = $('#user').val();
+        var pass1 = $('#pass').val();
+        var pass2 = $('#passConfirm').val(); 
+        if (pass1 != pass2) {
+            $('#pass, #passConfirm').addClass("alert-danger").val('');
+            alert("Passwords don't match"); 
+        } else if (pass1.length == 0) {
+            $('#pass, #passConfirm').addClass("alert-danger").val('');
+            alert("Password cannot be empty");
+        } else {
+            $('#user,#pass, #passConfirm').removeClass("alert-danger");
+            $.ajax({
+                url: '/api/account',
+                dataType: 'json',
+                type: 'POST',
+                data: {
+                    username: user,
+                    password: pass1
+                }
+            }); 
+            alert("created");
+        } 
+    } 
+
 })
 
 // Run the routes
@@ -97,10 +120,3 @@ var routes = (
 
 ReactDOM.render(routes, document.body);
 
-$("#registerForm").submit(function(e) {
-	e.preventDefault()
-	var user = $('#user').val()
-	var pass = $('#pass').val()
-	var pass2 = $('#passConfirm').val()
-	alert(user + " " + pass + " " + pass2)
-});
