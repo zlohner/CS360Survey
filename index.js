@@ -15,6 +15,7 @@ app.listen(80, function() {
 // load all api endpoints
 app.use(cookieParser())
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: false}))
 app.use(require('./server/auth.js'))
 app.use(require('./server/params.js'))
 var endpoints = ['account', 'response', 'survey']
