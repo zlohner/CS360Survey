@@ -2,7 +2,7 @@ var React = require("react")
 var ReactRouter = require("react-router")
 var History = ReactRouter.History
 
-var app = React.createClass({
+var App = React.createClass({
 	render: function() {
 		return (
 			<div>
@@ -19,8 +19,8 @@ var app = React.createClass({
 						</div>
 						<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 							<ul className="nav navbar-nav">
-								<li><a href="#/survey_create">create</a></li>
 								<li><a href="#/account_register">account</a></li>
+								<li><a href="#/survey_edit">create</a></li>
 							</ul>
 						</div>
 					</div>
@@ -34,4 +34,4 @@ var app = React.createClass({
 	}
 });
 
-module.exports = app
+module.exports = App

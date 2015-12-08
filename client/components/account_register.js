@@ -1,10 +1,12 @@
 var React = require("react")
 
+var $ = require("jquery")
+
 var account_register = React.createClass({
 	render: function() {
 		return (
 			<div className="col-lg-10 col-md-10 col-sm-10 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
-				<center><h1>Account Registration</h1></center>
+				<center><h1>Register</h1></center>
 				<form className="form-group col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" id="registerForm" onSubmit={this.onSubmit}>
 					<label htmlFor="user">Username:</label>
 					<input type="text" className="form-control registerElement" placeholder="username" id="user"/>
@@ -74,7 +76,7 @@ var account_register = React.createClass({
 					switch(statusCode) {
 						case 200:
 						//Redirect to home for now
-						location.href='#home';
+						location.href='#account_login';
 						break;
 
 						case 409:
