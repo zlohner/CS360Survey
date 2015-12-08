@@ -11,7 +11,6 @@ var AccountLogin = require("./account_login.js")
 var AccountRegister = require("./account_register.js")
 var SurveyCreate = require("./survey_edit.js")
 
-require("../../node_modules/bootstrap/dist/css/bootstrap.min.css")
 require("../css/app.css")
 
 var routes = (

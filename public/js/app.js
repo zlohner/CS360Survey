@@ -1,27 +1,23 @@
 webpackJsonp([1],{
 
 /***/ 0:
-/*!****************************!*\
-  !*** ./components/main.js ***!
-  \****************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(/*! react */ 1);
-	var ReactDOM = __webpack_require__(/*! react-dom */ 158);
-	var ReactRouter = __webpack_require__(/*! react-router */ 159);
-	
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	var ReactRouter = __webpack_require__(159);
+
 	var Router = ReactRouter.Router;
 	var Route = ReactRouter.Route;
 	var IndexRoute = ReactRouter.IndexRoute;
-	
-	var App = __webpack_require__(/*! ./app.js */ 210);
-	var AccountLogin = __webpack_require__(/*! ./account_login.js */ 228);
-	var AccountRegister = __webpack_require__(/*! ./account_register.js */ 212);
-	var SurveyCreate = __webpack_require__(/*! ./survey_edit.js */ 229);
-	
-	__webpack_require__(/*! ../../~/bootstrap/dist/css/bootstrap.min.css */ 217);
-	__webpack_require__(/*! ../css/app.css */ 226);
-	
+
+	var App = __webpack_require__(208);
+	var AccountLogin = __webpack_require__(209);
+	var AccountRegister = __webpack_require__(211);
+	var SurveyCreate = __webpack_require__(212);
+
+	__webpack_require__(215);
+
 	var routes = React.createElement(
 		Router,
 		null,
@@ -34,37 +30,31 @@ webpackJsonp([1],{
 			React.createElement(Route, { name: "survey_edit", path: "/survey_edit", component: SurveyCreate })
 		)
 	);
-	
+
 	ReactDOM.render(routes, document.getElementById("content"));
 
 /***/ },
 
 /***/ 158:
-/*!*******************************!*\
-  !*** ../~/react-dom/index.js ***!
-  \*******************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	
-	module.exports = __webpack_require__(/*! react/lib/ReactDOM */ 3);
+
+	module.exports = __webpack_require__(3);
 
 
 /***/ },
 
-/***/ 210:
-/*!***************************!*\
-  !*** ./components/app.js ***!
-  \***************************/
+/***/ 208:
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(/*! react */ 1);
-	var ReactRouter = __webpack_require__(/*! react-router */ 159);
+	var React = __webpack_require__(1);
+	var ReactRouter = __webpack_require__(159);
 	var History = ReactRouter.History;
-	
+
 	var App = React.createClass({
 		displayName: "App",
-	
+
 		render: function () {
 			return React.createElement(
 				"div",
@@ -132,27 +122,152 @@ webpackJsonp([1],{
 			);
 		}
 	});
-	
+
 	module.exports = App;
 
 /***/ },
 
-/***/ 212:
-/*!****************************************!*\
-  !*** ./components/account_register.js ***!
-  \****************************************/
+/***/ 209:
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(/*! react */ 1);
-	var ReactRouter = __webpack_require__(/*! react-router */ 159);
-	
-	var $ = __webpack_require__(/*! jquery */ 213);
-	
+	var React = __webpack_require__(1);
+	var ReactRouter = __webpack_require__(159);
+
+	var $ = __webpack_require__(210);
+
 	var Link = ReactRouter.Link;
-	
+
+	var AccountLogin = React.createClass({
+		displayName: "AccountLogin",
+
+		render: function () {
+			return React.createElement(
+				"div",
+				{ className: "col-lg-10 col-md-10 col-sm-10 col-lg-offset-1 col-md-offset-1 col-sm-offset-1" },
+				React.createElement(
+					"center",
+					null,
+					React.createElement(
+						"h1",
+						null,
+						"Survey"
+					)
+				),
+				React.createElement(
+					"form",
+					{ className: "form-group col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2", id: "registerForm", onSubmit: this.onSubmit },
+					React.createElement(
+						"label",
+						{ htmlFor: "user" },
+						"Username:"
+					),
+					React.createElement(
+						"div",
+						{ className: "input-group registerElement" },
+						React.createElement(
+							"span",
+							{ className: "input-group-addon" },
+							React.createElement("i", { className: "glyphicon glyphicon-user" })
+						),
+						React.createElement("input", { type: "text", className: "form-control", placeholder: "username", id: "user" })
+					),
+					React.createElement(
+						"label",
+						{ htmlFor: "pass" },
+						"Password:"
+					),
+					React.createElement(
+						"div",
+						{ className: "input-group registerElement" },
+						React.createElement(
+							"span",
+							{ className: "input-group-addon" },
+							React.createElement("i", { className: "glyphicon glyphicon-asterisk" })
+						),
+						React.createElement("input", { type: "password", className: "form-control", placeholder: "password", id: "pass" })
+					),
+					React.createElement("input", { type: "submit", className: "btn btn-success", value: "Log In" }),
+					" or ",
+					React.createElement(
+						Link,
+						{ className: "btn btn-default", to: "account_register" },
+						"Sign Up"
+					),
+					React.createElement("div", { className: "alert-danger", id: "errorMessage" })
+				)
+			);
+		},
+		clearErrors: function () {
+			$('#errorMessage').hide();
+			$('#errorMessage').html('<strong>Oops!</strong><br/>');
+		},
+		appendError: function (newMsg) {
+			$('#errorMessage').html($('#errorMessage').html() + newMsg + '<br/>');
+			$('#errorMessage').show();
+		},
+		componentDidMount: function () {
+			this.clearErrors();
+			$('#user').focus();
+		},
+		onSubmit: function (e) {
+			e.preventDefault();
+			this.clearErrors();
+			var user = $('#user').val();
+			var pass = $('#pass').val();
+			var errors = false;
+			$('#user,#pass, #passConfirm').removeClass('alert-danger');
+			$.ajax({
+				url: '/api/account/login',
+				dataType: 'json',
+				type: 'POST',
+				data: {
+					username: user,
+					password: pass
+				},
+				complete: function (xhr, statusText) {
+					var statusCode = xhr.status;
+					switch (statusCode) {
+						case 200:
+							//Log user in
+							location.href = '#survey_edit';
+							break;
+
+						case 404:
+							$('#user').focus();
+							$('#user').addClass('alert-danger');
+							$('#errorMessage').html($('#errorMessage').html() + 'Invalid Username or Password');
+							$('#errorMessage').show();
+							break;
+
+						case 401:
+							$('#pass').focus();
+							$('#pass').addClass('alert-danger');
+							$('#errorMessage').html($('#errorMessage').html() + 'Invalid Username or Password');
+							$('#errorMessage').show();
+							break;
+					}
+				}
+			});
+		}
+	});
+
+	module.exports = AccountLogin;
+
+/***/ },
+
+/***/ 211:
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ReactRouter = __webpack_require__(159);
+
+	var $ = __webpack_require__(210);
+
+	var Link = ReactRouter.Link;
+
 	var account_register = React.createClass({
 		displayName: "account_register",
-	
+
 		render: function () {
 			return React.createElement(
 				"div",
@@ -174,19 +289,46 @@ webpackJsonp([1],{
 						{ htmlFor: "user" },
 						"Username:"
 					),
-					React.createElement("input", { type: "text", className: "form-control registerElement", placeholder: "username", id: "user" }),
+					React.createElement(
+						"div",
+						{ className: "input-group registerElement" },
+						React.createElement(
+							"span",
+							{ className: "input-group-addon" },
+							React.createElement("i", { className: "glyphicon glyphicon-user" })
+						),
+						React.createElement("input", { type: "text", className: "form-control", placeholder: "username", id: "user" })
+					),
 					React.createElement(
 						"label",
 						{ htmlFor: "pass" },
 						"Password:"
 					),
-					React.createElement("input", { type: "password", className: "form-control registerElement", placeholder: "password", id: "pass" }),
+					React.createElement(
+						"div",
+						{ className: "input-group registerElement" },
+						React.createElement(
+							"span",
+							{ className: "input-group-addon" },
+							React.createElement("i", { className: "glyphicon glyphicon-asterisk" })
+						),
+						React.createElement("input", { type: "password", className: "form-control", placeholder: "password", id: "pass" })
+					),
 					React.createElement(
 						"label",
 						{ htmlFor: "passConfirm" },
 						"Confirm Password:"
 					),
-					React.createElement("input", { type: "password", className: "form-control registerElement", placeholder: "password again", id: "passConfirm" }),
+					React.createElement(
+						"div",
+						{ className: "input-group registerElement" },
+						React.createElement(
+							"span",
+							{ className: "input-group-addon" },
+							React.createElement("i", { className: "glyphicon glyphicon-asterisk" })
+						),
+						React.createElement("input", { type: "password", className: "form-control", placeholder: "password again", id: "passConfirm" })
+					),
 					React.createElement("input", { type: "submit", className: "btn btn-success", value: "Sign Up" }),
 					" or ",
 					React.createElement(
@@ -218,7 +360,7 @@ webpackJsonp([1],{
 			var pass2 = $('#passConfirm').val();
 			var errors = false;
 			$('#user,#pass, #passConfirm').removeClass('alert-danger');
-	
+
 			if (pass1 != pass2) {
 				$('#pass, #passConfirm').addClass('alert-danger').val('');
 				$('#pass').focus();
@@ -253,7 +395,7 @@ webpackJsonp([1],{
 								//Redirect to home for now
 								location.href = '#survey_edit';
 								break;
-	
+
 							case 409:
 								$('#user').focus();
 								$('#user').addClass('alert-danger');
@@ -266,22 +408,49 @@ webpackJsonp([1],{
 			}
 		}
 	});
-	
+
 	module.exports = account_register;
 
 /***/ },
 
-/***/ 215:
-/*!*************************************!*\
-  !*** ./components/survey_header.js ***!
-  \*************************************/
+/***/ 212:
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(/*! react */ 1);
-	
+	var React = __webpack_require__(1);
+
+	var SurveyHeader = __webpack_require__(213);
+	var Survey = __webpack_require__(214);
+
+	var SurveyEdit = React.createClass({
+		displayName: "SurveyEdit",
+
+		getInitialState: function () {
+			return {
+				survey: { title: "A Survey", length: 9 }
+			};
+		},
+
+		render: function () {
+			return React.createElement(
+				"div",
+				{ className: "view" },
+				React.createElement(SurveyHeader, { name: "Zac", survey: this.state.survey })
+			);
+		}
+	});
+
+	module.exports = SurveyEdit;
+
+/***/ },
+
+/***/ 213:
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
 	var SurveyHeader = React.createClass({
 		displayName: "SurveyHeader",
-	
+
 		render: function () {
 			return React.createElement(
 				"header",
@@ -335,197 +504,33 @@ webpackJsonp([1],{
 			);
 		}
 	});
-	
+
 	module.exports = SurveyHeader;
 
 /***/ },
 
-/***/ 216:
-/*!******************************!*\
-  !*** ./components/survey.js ***!
-  \******************************/
+/***/ 214:
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(/*! react */ 1);
-	
+	var React = __webpack_require__(1);
+
 	var Survey = React.createClass({
 		displayName: "Survey",
-	
+
 		render: function () {
 			return React.createElement("div", { className: "view" });
 		}
 	});
-	
+
 	module.exports = Survey;
 
 /***/ },
 
-/***/ 217:
-/*!*************************************************!*\
-  !*** ../~/bootstrap/dist/css/bootstrap.min.css ***!
-  \*************************************************/
+/***/ 215:
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-
-/***/ },
-
-/***/ 226:
-/*!*********************!*\
-  !*** ./css/app.css ***!
-  \*********************/
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-
-/***/ 228:
-/*!*************************************!*\
-  !*** ./components/account_login.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(/*! react */ 1);
-	var ReactRouter = __webpack_require__(/*! react-router */ 159);
-	
-	var $ = __webpack_require__(/*! jquery */ 213);
-	
-	var Link = ReactRouter.Link;
-	
-	var AccountLogin = React.createClass({
-		displayName: "AccountLogin",
-	
-		render: function () {
-			return React.createElement(
-				"div",
-				{ className: "col-lg-10 col-md-10 col-sm-10 col-lg-offset-1 col-md-offset-1 col-sm-offset-1" },
-				React.createElement(
-					"center",
-					null,
-					React.createElement(
-						"h1",
-						null,
-						"Survey"
-					)
-				),
-				React.createElement(
-					"form",
-					{ className: "form-group col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2", id: "registerForm", onSubmit: this.onSubmit },
-					React.createElement(
-						"label",
-						{ htmlFor: "user" },
-						"Username:"
-					),
-					React.createElement("input", { type: "text", className: "form-control registerElement", placeholder: "username", id: "user" }),
-					React.createElement(
-						"label",
-						{ htmlFor: "pass" },
-						"Password:"
-					),
-					React.createElement("input", { type: "password", className: "form-control registerElement", placeholder: "password", id: "pass" }),
-					React.createElement("input", { type: "submit", className: "btn btn-success", value: "Log In" }),
-					" or ",
-					React.createElement(
-						Link,
-						{ className: "btn btn-default", to: "account_register" },
-						"Sign Up"
-					),
-					React.createElement("div", { className: "alert-danger", id: "errorMessage" })
-				)
-			);
-		},
-		clearErrors: function () {
-			$('#errorMessage').hide();
-			$('#errorMessage').html('<strong>Oops!</strong><br/>');
-		},
-		appendError: function (newMsg) {
-			$('#errorMessage').html($('#errorMessage').html() + newMsg + '<br/>');
-			$('#errorMessage').show();
-		},
-		componentDidMount: function () {
-			this.clearErrors();
-			$('#user').focus();
-		},
-		onSubmit: function (e) {
-			e.preventDefault();
-			this.clearErrors();
-			var user = $('#user').val();
-			var pass = $('#pass').val();
-			var errors = false;
-			$('#user,#pass, #passConfirm').removeClass('alert-danger');
-			$.ajax({
-				url: '/api/account/login',
-				dataType: 'json',
-				type: 'POST',
-				data: {
-					username: user,
-					password: pass
-				},
-				complete: function (xhr, statusText) {
-					var statusCode = xhr.status;
-					switch (statusCode) {
-						case 200:
-							//Log user in
-							location.href = '#survey_edit';
-							break;
-	
-						case 404:
-							$('#user').focus();
-							$('#user').addClass('alert-danger');
-							$('#errorMessage').html($('#errorMessage').html() + 'Invalid Username or Password');
-							$('#errorMessage').show();
-							break;
-	
-						case 401:
-							$('#pass').focus();
-							$('#pass').addClass('alert-danger');
-							$('#errorMessage').html($('#errorMessage').html() + 'Invalid Username or Password');
-							$('#errorMessage').show();
-							break;
-					}
-				}
-			});
-		}
-	});
-	
-	module.exports = AccountLogin;
-
-/***/ },
-
-/***/ 229:
-/*!***********************************!*\
-  !*** ./components/survey_edit.js ***!
-  \***********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(/*! react */ 1);
-	
-	var SurveyHeader = __webpack_require__(/*! ./survey_header.js */ 215);
-	var Survey = __webpack_require__(/*! ./survey.js */ 216);
-	
-	var SurveyEdit = React.createClass({
-		displayName: "SurveyEdit",
-	
-		getInitialState: function () {
-			return {
-				survey: { title: "A Survey", length: 9 }
-			};
-		},
-	
-		render: function () {
-			return React.createElement(
-				"div",
-				{ className: "view" },
-				React.createElement(SurveyHeader, { name: "Zac", survey: this.state.survey })
-			);
-		}
-	});
-	
-	module.exports = SurveyEdit;
 
 /***/ }
 
 });
-//# sourceMappingURL=app.js.map
-//# sourceMappingURL=app.js.map
