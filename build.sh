@@ -8,6 +8,7 @@ npm install express
 npm install mongodb
 npm install uuid
 npm install jquery
+npm install jquery.cookie 
 
 # react
 npm install react
