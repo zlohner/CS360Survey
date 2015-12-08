@@ -6,7 +6,7 @@ var Survey = require("./survey.js")
 var SurveyEdit = React.createClass({
 	getInitialState: function() {
 		return {
-			survey: {title: "A Survey", length: 9},
+			survey: {title: "A Survey", length: 1},
 		}
 	},
 
