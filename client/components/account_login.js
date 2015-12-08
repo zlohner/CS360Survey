@@ -48,7 +48,7 @@ var AccountLogin = React.createClass({
 		$('#user,#pass, #passConfirm').removeClass('alert-danger')
 		$.ajax({
 			url: '/api/account/login',
-			contentType: 'application/json',
+			dataType: 'applicat/json',
 			type: 'POST',
 			data: {
 				username: user,
@@ -59,7 +59,7 @@ var AccountLogin = React.createClass({
 				switch(statusCode) {
 					case 200:
 					//Log user in
-					$('#loginStatus').html('logout') 
+					$('#loginStatus').html('logout')
 					location.href='#survey_edit'
 					break
 
