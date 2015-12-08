@@ -6,8 +6,8 @@ var SurveyHeader = React.createClass({
 			<header id="header">
 				<div className="row">
 					<div className="col-md-6">
-						<h1>{this.props.survey.title}</h1>
-						<p><i>Author {this.props.name}</i></p>
+						<h1>{this.props.survey.name}</h1>
+						<p><i>Author {this.props.user}</i></p>
 						<p>
 							<span id="question-count" className="label label-default">
 								<strong>{this.props.survey.length}</strong> question(s)

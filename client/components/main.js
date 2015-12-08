@@ -9,7 +9,8 @@ var IndexRoute = ReactRouter.IndexRoute
 var App = require("./app.js")
 var AccountLogin = require("./account_login.js")
 var AccountRegister = require("./account_register.js")
-var SurveyCreate = require("./survey_edit.js")
+var SurveyList = require("./survey_list.js")
+var SurveyEdit = require("./survey_edit.js")
 
 require("../css/app.css")
 
@@ -19,7 +20,8 @@ var routes = (
 			<IndexRoute component = {AccountLogin} />
 			<Route name="account_login" path="/account_login" component={AccountLogin} />
 			<Route name="account_register" path="/account_register" component={AccountRegister} />
-			<Route name="survey_edit" path="/survey_edit" component={SurveyCreate} />
+			<Route name="survey_list" path="/survey_list" component={SurveyList} />
+			<Route name="survey_edit" path="/survey_edit" component={SurveyEdit} />
 		</Route>
 	</Router>
 );

@@ -15,12 +15,12 @@ var AccountLogin = React.createClass({
 					<div className="input-group registerElement">
 							<span className="input-group-addon"><i className="glyphicon glyphicon-user"></i></span>
 							<input type="text" className="form-control" placeholder="username" id="user"/>
-					</div> 
+					</div>
 					<label htmlFor="pass">Password:</label>
-					<div className="input-group registerElement"> 
-						<span className="input-group-addon"><i className="glyphicon glyphicon-asterisk"></i></span> 
+					<div className="input-group registerElement">
+						<span className="input-group-addon"><i className="glyphicon glyphicon-asterisk"></i></span>
 						<input type="password" className="form-control" placeholder="password" id="pass"/>
-				  </div> 
+				  </div>
 					<input type="submit" className="btn btn-success" value="Log In"/> or <Link className="btn btn-default" to="account_register">Sign Up</Link>
 					<div className="alert-danger" id="errorMessage"></div>
 				</form>
@@ -48,7 +48,7 @@ var AccountLogin = React.createClass({
 		$('#user,#pass, #passConfirm').removeClass('alert-danger')
 		$.ajax({
 			url: '/api/account/login',
-			dataType: 'json',
+			contentType: 'application/json',
 			type: 'POST',
 			data: {
 				username: user,
