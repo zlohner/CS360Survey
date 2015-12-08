@@ -19,6 +19,7 @@ npm install bootstrap
 npm install style-loader
 npm install css-loader
 npm install url
+npm install url-loader 
 
 # webpack
 npm install webpack
