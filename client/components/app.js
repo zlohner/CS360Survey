@@ -2,6 +2,9 @@ var React = require("react")
 var ReactRouter = require("react-router")
 var History = ReactRouter.History
 
+var $ = require('jquery')
+require("../../node_modules/jquery.cookie/jquery.cookie.js")  
+
 var App = React.createClass({
 	render: function() {
 		return (
@@ -23,6 +26,9 @@ var App = React.createClass({
 								<li><a href="#/survey_list">list</a></li>
 								<li><a href="#/survey_edit">edit</a></li>
 							</ul>
+							<ul className="nav navbar-nav pull-right" id="loginButton">
+									<li><a href="" onClick={this.handleLoginStatus} id="loginStatus">{this.getLoginStatus()}</a></li>
+							</ul> 
 						</div>
 					</div>
 				</nav>
@@ -32,7 +38,27 @@ var App = React.createClass({
 				</div>
 			</div>
 		);
-	}
+	},
+	getLoginStatus: function() {
+		var userCookie = $.cookie('username')
+		if(userCookie) {
+				return 'logout'
+		} else {
+				return 'login' 
+		}
+
+	},
+	handleLoginStatus: function() {
+		if(this.getLoginStatus() == 'login') {
+				location.href = '#'
+		} else if(this.getLoginStatus() == 'logout') {
+				$.removeCookie('auth')
+				$.removeCookie('username') 
+				location.href = '#' 
+		}  
+		
+		$('#loginStatus').html(this.getLoginStatus()) 
+	} 
 });
 
 module.exports = App

@@ -59,6 +59,7 @@ var AccountLogin = React.createClass({
 				switch(statusCode) {
 					case 200:
 					//Log user in
+					$('#loginStatus').html('logout') 
 					location.href='#survey_edit'
 					break
 
