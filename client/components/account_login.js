@@ -12,10 +12,15 @@ var AccountLogin = React.createClass({
 				<center><h1>Survey</h1></center>
 				<form className="form-group col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" id="registerForm" onSubmit={this.onSubmit}>
 					<label htmlFor="user">Username:</label>
-					<input type="text" className="form-control registerElement" placeholder="username" id="user"/>
-
+					<div className="input-group registerElement">
+							<span className="input-group-addon"><i className="glyphicon glyphicon-user"></i></span>
+							<input type="text" className="form-control" placeholder="username" id="user"/>
+					</div> 
 					<label htmlFor="pass">Password:</label>
-					<input type="password" className="form-control registerElement" placeholder="password" id="pass"/>
+					<div className="input-group registerElement"> 
+						<span className="input-group-addon"><i className="glyphicon glyphicon-asterisk"></i></span> 
+						<input type="password" className="form-control" placeholder="password" id="pass"/>
+				  </div> 
 					<input type="submit" className="btn btn-success" value="Log In"/> or <Link className="btn btn-default" to="account_register">Sign Up</Link>
 					<div className="alert-danger" id="errorMessage"></div>
 				</form>
