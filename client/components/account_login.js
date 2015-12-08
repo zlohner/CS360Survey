@@ -1,9 +1,9 @@
 var React = require("react")
-var ReactRouter = require("react-router");
+var ReactRouter = require("react-router")
 
 var $ = require("jquery")
 
-var Link = ReactRouter.Link;
+var Link = ReactRouter.Link
 
 var AccountLogin = React.createClass({
 	render: function() {
@@ -23,19 +23,56 @@ var AccountLogin = React.createClass({
 		)
 	},
 	clearErrors: function() {
-		$('#errorMessage').hide();
-		$('#errorMessage').html('<strong>Oops!</strong><br/>');
+		$('#errorMessage').hide()
+		$('#errorMessage').html('<strong>Oops!</strong><br/>')
 	},
 	appendError: function(newMsg) {
-		$('#errorMessage').html($('#errorMessage').html()+newMsg+'<br/>');
-		$('#errorMessage').show();
+		$('#errorMessage').html($('#errorMessage').html()+newMsg+'<br/>')
+		$('#errorMessage').show()
 	},
 	componentDidMount: function() {
-		this.clearErrors();
-		$('#user').focus();
+		this.clearErrors()
+		$('#user').focus()
 	},
 	onSubmit: function(e) {
-		this.appendError("actually logging in not implemented")
+		e.preventDefault()
+		this.clearErrors()
+		var user = $('#user').val()
+		var pass = $('#pass').val()
+		var errors = false
+		$('#user,#pass, #passConfirm').removeClass('alert-danger')
+		$.ajax({
+			url: '/api/account/login',
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				username: user,
+				password: pass
+			},
+			complete: function(xhr, statusText){
+				var statusCode = xhr.status
+				switch(statusCode) {
+					case 200:
+					//Log user in
+					location.href='#survey_edit'
+					break
+
+					case 404:
+					$('#user').focus()
+					$('#user').addClass('alert-danger')
+					$('#errorMessage').html($('#errorMessage').html()+'Invalid Username or Password')
+					$('#errorMessage').show()
+					break
+
+					case 401:
+					$('#pass').focus()
+					$('#pass').addClass('alert-danger')
+					$('#errorMessage').html($('#errorMessage').html()+'Invalid Username or Password')
+					$('#errorMessage').show()
+					break
+				}
+			}
+		})
 	}
 })
 

@@ -10,19 +10,20 @@ npm install uuid
 npm install jquery
 
 # react
-npm install react 
-npm install react-dom 
-npm install react-router 
+npm install react
+npm install react-dom
+npm install react-router
 
 # bootstrap
 npm install bootstrap
 npm install style-loader
 npm install css-loader
+npm install url
 
 # webpack
-npm install webpack 
-npm install file-loader 
-npm install babel-core 
-npm install babel-loader 
+npm install webpack
+npm install file-loader
+npm install babel-core
+npm install babel-loader
 npm install babel-preset-react
 npm install extract-text-webpack-plugin

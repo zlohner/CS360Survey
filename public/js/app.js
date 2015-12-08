@@ -144,8 +144,11 @@ webpackJsonp([1],{
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(/*! react */ 1);
+	var ReactRouter = __webpack_require__(/*! react-router */ 159);
 	
 	var $ = __webpack_require__(/*! jquery */ 213);
+	
+	var Link = ReactRouter.Link;
 	
 	var account_register = React.createClass({
 		displayName: "account_register",
@@ -185,6 +188,12 @@ webpackJsonp([1],{
 					),
 					React.createElement("input", { type: "password", className: "form-control registerElement", placeholder: "password again", id: "passConfirm" }),
 					React.createElement("input", { type: "submit", className: "btn btn-success", value: "Sign Up" }),
+					" or ",
+					React.createElement(
+						Link,
+						{ className: "btn btn-default", to: "account_login" },
+						"Log In"
+					),
 					React.createElement("div", { className: "alert-danger", id: "errorMessage" })
 				)
 			);
@@ -242,13 +251,13 @@ webpackJsonp([1],{
 						switch (statusCode) {
 							case 200:
 								//Redirect to home for now
-								location.href = '#account_login';
+								location.href = '#survey_edit';
 								break;
 	
 							case 409:
 								$('#user').focus();
 								$('#user').addClass('alert-danger');
-								$('#errorMessage').html($('#errorMessage').html() + 'Username already in use<br/>');
+								$('#errorMessage').html($('#errorMessage').html() + 'Username is already in use');
 								$('#errorMessage').show();
 								break;
 						}
@@ -439,7 +448,44 @@ webpackJsonp([1],{
 			$('#user').focus();
 		},
 		onSubmit: function (e) {
-			this.appendError("actually logging in not implemented");
+			e.preventDefault();
+			this.clearErrors();
+			var user = $('#user').val();
+			var pass = $('#pass').val();
+			var errors = false;
+			$('#user,#pass, #passConfirm').removeClass('alert-danger');
+			$.ajax({
+				url: '/api/account/login',
+				dataType: 'json',
+				type: 'POST',
+				data: {
+					username: user,
+					password: pass
+				},
+				complete: function (xhr, statusText) {
+					var statusCode = xhr.status;
+					switch (statusCode) {
+						case 200:
+							//Log user in
+							location.href = '#survey_edit';
+							break;
+	
+						case 404:
+							$('#user').focus();
+							$('#user').addClass('alert-danger');
+							$('#errorMessage').html($('#errorMessage').html() + 'Invalid Username or Password');
+							$('#errorMessage').show();
+							break;
+	
+						case 401:
+							$('#pass').focus();
+							$('#pass').addClass('alert-danger');
+							$('#errorMessage').html($('#errorMessage').html() + 'Invalid Username or Password');
+							$('#errorMessage').show();
+							break;
+					}
+				}
+			});
 		}
 	});
 	

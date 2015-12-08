@@ -1,6 +1,9 @@
 var React = require("react")
+var ReactRouter = require("react-router")
 
 var $ = require("jquery")
+
+var Link = ReactRouter.Link
 
 var account_register = React.createClass({
 	render: function() {
@@ -17,52 +20,52 @@ var account_register = React.createClass({
 					<label htmlFor="passConfirm">Confirm Password:</label>
 					<input type="password" className="form-control registerElement" placeholder="password again" id="passConfirm"/>
 
-					<input type="submit" className="btn btn-success" value="Sign Up"/>
+					<input type="submit" className="btn btn-success" value="Sign Up"/> or <Link className="btn btn-default" to="account_login">Log In</Link>
 					<div className="alert-danger" id="errorMessage"></div>
 				</form>
 			</div>
-		);
+		)
 	},
 	clearErrors: function() {
-		$('#errorMessage').hide();
-		$('#errorMessage').html('<strong>Oops!</strong><br/>');
+		$('#errorMessage').hide()
+		$('#errorMessage').html('<strong>Oops!</strong><br/>')
 	},
 	appendError: function(newMsg) {
-		$('#errorMessage').html($('#errorMessage').html()+newMsg+'<br/>');
-		$('#errorMessage').show();
+		$('#errorMessage').html($('#errorMessage').html()+newMsg+'<br/>')
+		$('#errorMessage').show()
 	},
 	componentDidMount: function() {
-		this.clearErrors();
-		$('#user').focus();
+		this.clearErrors()
+		$('#user').focus()
 	},
 	onSubmit:function(e) {
-		e.preventDefault();
-		this.clearErrors();
-		var user = $('#user').val();
-		var pass1 = $('#pass').val();
-		var pass2 = $('#passConfirm').val();
-		var errors = false;
-		$('#user,#pass, #passConfirm').removeClass('alert-danger');
+		e.preventDefault()
+		this.clearErrors()
+		var user = $('#user').val()
+		var pass1 = $('#pass').val()
+		var pass2 = $('#passConfirm').val()
+		var errors = false
+		$('#user,#pass, #passConfirm').removeClass('alert-danger')
 
 		if (pass1 != pass2) {
-			$('#pass, #passConfirm').addClass('alert-danger').val('');
-			$('#pass').focus();
-			this.appendError('Passwords do not match');
-			errors = true;
+			$('#pass, #passConfirm').addClass('alert-danger').val('')
+			$('#pass').focus()
+			this.appendError('Passwords do not match')
+			errors = true
 		}
 		if (pass1.length == 0) {
-			$('#pass, #passConfirm').addClass('alert-danger').val('');
-			this.appendError('Password cannot be empty');
-			errors = true;
+			$('#pass, #passConfirm').addClass('alert-danger').val('')
+			this.appendError('Password cannot be empty')
+			errors = true
 		}
 		if (user.length == 0) {
-			$('#user').addClass('alert-danger');
-			this.appendError('Username cannot be empty');
-			$('#user').focus();
-			errors = true;
+			$('#user').addClass('alert-danger')
+			this.appendError('Username cannot be empty')
+			$('#user').focus()
+			errors = true
 		}
-		if (!errors)    {
-			$('#user,#pass, #passConfirm').removeClass('alert-danger');
+		if (!errors) {
+			$('#user,#pass, #passConfirm').removeClass('alert-danger')
 			$.ajax({
 				url: '/api/account',
 				dataType: 'json',
@@ -72,24 +75,24 @@ var account_register = React.createClass({
 					password: pass1
 				},
 				complete: function(xhr, statusText){
-					var statusCode = xhr.status;
+					var statusCode = xhr.status
 					switch(statusCode) {
 						case 200:
 						//Redirect to home for now
-						location.href='#account_login';
-						break;
+						location.href='#survey_edit'
+						break
 
 						case 409:
-						$('#user').focus();
-						$('#user').addClass('alert-danger');
-						$('#errorMessage').html($('#errorMessage').html()+'Username already in use<br/>');
-						$('#errorMessage').show();
-						break;
+						$('#user').focus()
+						$('#user').addClass('alert-danger')
+						$('#errorMessage').html($('#errorMessage').html()+'Username is already in use')
+						$('#errorMessage').show()
+						break
 					}
 				}
-			});
+			})
 		}
 	}
-});
+})
 
 module.exports = account_register
