@@ -1,5 +1,3 @@
-C	logout button
-M	actually check if they're logged in, show name in navbar or sth
 Z	list of surveys
 M	edit page for survey
 C	results page for survey
