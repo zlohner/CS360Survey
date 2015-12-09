@@ -48,7 +48,6 @@ var AccountLogin = React.createClass({
 		$('#user,#pass, #passConfirm').removeClass('alert-danger')
 		$.ajax({
 			url: '/api/account/login',
-			dataType: 'applicat/json',
 			type: 'POST',
 			data: {
 				username: user,

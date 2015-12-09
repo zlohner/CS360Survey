@@ -6,14 +6,40 @@ var Survey = require("./survey.js")
 var SurveyEdit = React.createClass({
 	getInitialState: function() {
 		return {
-			survey: {title: "A Survey", length: 1},
+			survey: {
+				_id: 1,
+				owner: 'Bob',
+				published: true,
+				closed: false,
+				name: 'A Quick Questionaire',
+				questions: [
+					{
+						type: 'text',
+						prompt: 'What is your name?'
+					},
+					{
+						type: 'number',
+						prompt: 'How old are you?'
+					},
+					{
+						type: 'grid',
+						prompt: 'Please rate the following foods:',
+						columns: [
+							'EW GROSS', 'meh', 'pretty good', 'fantastic'
+						],
+						rows: [
+							'burgers', 'fries', 'chicken teriyaki'
+						]
+					}
+				]
+			}
 		}
 	},
 
 	render: function() {
 		return (
 			<div className = "view">
-				<SurveyHeader name={"Zac"} survey={this.state.survey} />
+				<SurveyHeader name={this.name} key={this.state.survey._id} survey={this.state.survey} />
 			</div>
 		)
 	}
