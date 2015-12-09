@@ -10,19 +10,22 @@ var SurveyHeader = React.createClass({
 		if (survey.published) {
 			published = "Published"
 		}
-		var status = "Open"
-		if (survey.closed) {
-			status = "Closed"
+		var status = ""
+		if (survey.published) {
+		status = "- Open"
+			if (survey.closed) {
+				status = "- Closed"
+			}
 		}
 		return (
 			<header id="header">
 				<div className="row">
 					<div className="col-md-6">
-						<Link className="btn btn-warning" to="survey_edit">{survey.name}</Link>
 						<p>
-							<span id="question-info" className="label label-default">
-								<i><b>Author:</b> {survey.owner} <b>Status:</b> {published} - {status}</i> <strong>{survey.questions.length}</strong> question(s)
-							</span>
+							<Link className="btn btn-warning" to="survey_edit">
+							{survey.name} &nbsp;
+							<i> <b>Author:</b> {survey.owner} <b>Status:</b> {published} {status} <b>Question(s):</b> {survey.questions.length} </i>
+							</Link> 
 						</p>
 					</div>
 				</div>
