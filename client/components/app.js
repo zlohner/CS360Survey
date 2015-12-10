@@ -22,11 +22,11 @@ var App = React.createClass({
 						</div>
 						<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 							<ul className="nav navbar-nav">
-								<li><a href="#/survey_list">surveys</a></li>
+
 								<li><a href="#/survey_respond">respond</a></li>
 							</ul>
 							<ul className="nav navbar-nav pull-right" id="loginButton">
-									<li><a href="#/account_register">account</a></li>
+									<li><a href="#/account_register">register</a></li>
 									<li><a href="" onClick={this.handleLoginStatus} id="loginStatus">{this.getLoginStatus()}</a></li>
 							</ul>
 						</div>
