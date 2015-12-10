@@ -17,7 +17,7 @@ var SurveyCreate = React.createClass({
 			location.href = "#account_login"
 		else
 			this.loadSurvey()
-		
+
 		return {
 			editor: {
 				active: false
@@ -171,6 +171,8 @@ var SurveyCreate = React.createClass({
 	}
 })
 
+
+
 var SurveyEditWindow = React.createClass({
 	componentDidMount: function() {
 		var el = $('.lightbox')
@@ -201,9 +203,17 @@ var SurveyEditWindow = React.createClass({
 				prompt: ''
 			}
 			break
-		case 'email':
+		case 'number':
 			data = {
-				type: 'email',
+				type: 'number',
+				prompt: '',
+				min: 1,
+				max: 10
+			}
+			break
+		case 'toggle':
+			data = {
+				type: 'toggle',
 				prompt: ''
 			}
 			break
@@ -228,12 +238,30 @@ var SurveyEditWindow = React.createClass({
 			var questionPane
 			switch (this.props.data.type) {
 			case 'text':
-			case 'email':
+			case 'toggle':
 				questionPane = (
 					<div>
 						<div className="form-group">
 							<label className="control-label">Prompt</label>
 							<input name="prompt" type="text" className="form-control" defaultValue={this.props.data.prompt} />
+						</div>
+					</div>
+				)
+				break
+			case 'number':
+				questionPane = (
+					<div>
+						<div className="form-group">
+							<label className="control-label">Prompt</label>
+							<input name="prompt" type="text" className="form-control" defaultValue={this.props.data.prompt} />
+						</div>
+						<div className="form-group">
+							<label className="control-label">Minimum</label>
+							<input name="min" type="number" className="form-control" defaultValue={this.props.data.min} />
+						</div>
+						<div className="form-group">
+							<label className="control-label">Maximum</label>
+							<input name="max" type="number" className="form-control" defaultValue={this.props.data.max} />
 						</div>
 					</div>
 				)
@@ -246,7 +274,8 @@ var SurveyEditWindow = React.createClass({
 						<label className="control-label">Type</label>
 						<select onChange={this.questionChangeType} name="type" className="form-control" value={this.props.data.type}>
 							<option value="text">Text</option>
-							<option value="email">Email</option>
+							<option value="number">Number</option>
+							<option value="toggle">Yes/No</option>
 						</select>
 					</div>
 					{questionPane}
@@ -295,11 +324,27 @@ var SurveyEditQuestion = React.createClass({
 
 		switch (data.type) {
 		case 'text':
-		case 'email':
 			return (
 				<div onClick={this.props.onClick} className="form-group">
 					<label className="control-label">{data.prompt}</label>
 					<input type="text" className="form-control" />
+				</div>
+			)
+		case 'number':
+			return (
+				<div onClick={this.props.onClick} className="form-group">
+					<label className="control-label">{data.prompt}</label>
+					<input type="range" min={data.min} max={data.max} step="1" className="form-control" />
+				</div>
+			)
+		case 'toggle':
+			return (
+				<div onClick={this.props.onClick} className="form-group">
+					<label className="control-label">{data.prompt}</label>
+					<input type="radio" className="form-control" />
+					<span>Yes</span>
+					<input type="radio" className="form-control" />
+					<span>No</span>
 				</div>
 			)
 		}
