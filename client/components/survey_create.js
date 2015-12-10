@@ -13,6 +13,9 @@ function getFormData(form) {
 
 var SurveyCreate = React.createClass({
 	getInitialState: function() {
+		if (!$.cookie("username"))
+			location.href = "#account_login"
+		
 		return {
 			editor: {
 				active: false
@@ -80,13 +83,13 @@ var SurveyCreate = React.createClass({
 		if (!confirm('Once your survey is published, it cannot be edited!'))
 			return
 
-		saveSurvey(function(id) {
+		this.saveSurvey(function(id) {
 			$.ajax({
 				url: '/api/survey/open/'+id,
 				method: 'POST'
 			}).done(function() {
 				alert('Your survey has been published.')
-				location.href = '/#/survey_list'
+				location.href = '#survey_list'
 			}).error(function() {
 				alert('There was a problem publishing your survey!')
 			})

@@ -1,12 +1,42 @@
 var React = require("react")
 var ReactRouter = require("react-router")
 var History = ReactRouter.History
+var Link = ReactRouter.Link
 
 var $ = require('jquery')
 require("../../node_modules/jquery.cookie/jquery.cookie.js")
 
 var App = React.createClass({
 	render: function() {
+		var navLeft = []
+		var navRight = []
+		var i = 0
+
+		if (this.checkLoggedIn()) {
+			navLeft.push(
+				<li key={i++}><Link to="survey_list">my surveys</Link></li>
+			)
+			navLeft.push(
+				<li key={i++}><Link to="survey_respond">respond</Link></li>
+			)
+			navRight.push(
+				<li key={i++}><a>welcome, {$.cookie('username')}</a></li>
+			)
+			navRight.push(
+				<li key={i++}><Link to="account_login" onClick={this.handleLogout}>logout</Link></li>
+			)
+		} else {
+			navLeft.push(
+				<li key={i++}><Link to="survey_respond">respond</Link></li>
+			)
+			navRight.push(
+				<li key={i++}><Link to="account_register">register</Link></li>
+			)
+			navRight.push(
+				<li key={i++}><Link to="account_login">login</Link></li>
+			)
+		}
+
 		return (
 			<div>
 				<nav className="navbar navbar-inverse" role="navigation">
@@ -18,16 +48,14 @@ var App = React.createClass({
 								<span className="icon-bar"></span>
 								<span className="icon-bar"></span>
 							</button>
-							<a className="navbar-brand" href="/">Home</a>
+							<a className="navbar-brand" href="#">Home</a>
 						</div>
 						<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 							<ul className="nav navbar-nav">
-
-								<li><a href="#/survey_respond">respond</a></li>
+								{navLeft}
 							</ul>
 							<ul className="nav navbar-nav pull-right" id="loginButton">
-									<li><a href="#/account_register">register</a></li>
-									<li><a href="" onClick={this.handleLoginStatus} id="loginStatus">{this.getLoginStatus()}</a></li>
+								{navRight}
 							</ul>
 						</div>
 					</div>
@@ -39,25 +67,19 @@ var App = React.createClass({
 			</div>
 		);
 	},
-	getLoginStatus: function() {
+	checkLoggedIn: function() {
 		var userCookie = $.cookie('username')
 		if(userCookie) {
-			return 'logout'
+			return true
 		} else {
-			return 'login'
+			return false
 		}
 
 	},
-	handleLoginStatus: function() {
-		if(this.getLoginStatus() == 'login') {
-			location.href = '#'
-		} else if(this.getLoginStatus() == 'logout') {
-			$.removeCookie('auth')
-			$.removeCookie('username')
-			location.href = '#'
-		}
-
-		$('#loginStatus').html(this.getLoginStatus())
+	handleLogout: function() {
+		$.removeCookie('auth')
+		$.removeCookie('username')
+		location.href = '#'
 	}
 });
 
