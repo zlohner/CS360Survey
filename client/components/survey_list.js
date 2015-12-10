@@ -4,6 +4,8 @@ var ReactRouter = require("react-router")
 var SurveyHeader = require("./survey_header.js")
 var Survey = require("./survey.js")
 
+var Link = ReactRouter.Link
+
 var $ = require("jquery")
 
 var SurveyList = React.createClass({
@@ -58,6 +60,7 @@ var SurveyList = React.createClass({
 			<div className="panel panel-default">
 				<div className="panel-body">
 					{list}
+					<Link className="btn btn-primary" to="survey_edit">Create New Survey</Link>
 				</div>
 			</div>
 		)

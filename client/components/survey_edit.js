@@ -19,9 +19,8 @@ var SurveyEdit = React.createClass({
 	},
 
 	componentDidMount: function() {
-		this.state.survey = this.getSurvey()
-		var userCookie = $.cookie("username")
-		if (!userCookie) {
+		this.state.survey = this.getSurvey() 
+		if (!$.cookie("username")) {
 			location.href = "#account_login"
 		}
 	},
