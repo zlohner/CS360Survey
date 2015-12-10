@@ -51,11 +51,11 @@ var App = React.createClass({
 	},
 	handleLoginStatus: function() {
 		if(this.getLoginStatus() == 'login') {
-				location.href = '#'
+			location.href = '#'
 		} else if(this.getLoginStatus() == 'logout') {
-				$.removeCookie('auth')
-				$.removeCookie('username')
-				location.href = '#'
+			$.removeCookie('auth')
+			$.removeCookie('username')
+			location.href = '#'
 		}
 
 		$('#loginStatus').html(this.getLoginStatus())

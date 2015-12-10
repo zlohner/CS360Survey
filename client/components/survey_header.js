@@ -18,18 +18,10 @@ var SurveyHeader = React.createClass({
 			}
 		}
 		return (
-			<header id="header">
-				<div className="row">
-					<div className="col-md-6">
-						<p>
-							<Link className="btn btn-primary" to="survey_edit">
-							<b>{survey.name}</b> &nbsp;
-							<i> <b>Author:</b> {survey.owner} <b>Status:</b> {published} {status} <b>Question(s):</b> {survey.questions.length} </i>
-							</Link>
-						</p>
-					</div>
-				</div>
-			</header>
+			<Link className="btn btn-primary" to="survey_edit">
+			<b>{survey.name}</b> &nbsp; - &nbsp;
+			<i> <b>Author:</b> {survey.owner} &nbsp; <b>Status:</b> {published} {status} &nbsp; <b>Question(s):</b> {survey.questions.length} </i>
+			</Link>
 		)
 	}
 })
