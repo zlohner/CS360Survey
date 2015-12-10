@@ -1,7 +1,7 @@
 var React = require("react")
 var ReactRouter = require("react-router")
 
-var QuestionRespond = require("./question_respond.js")
+var QuestionRespond = require("./survey_question.js")
 
 var Link = ReactRouter.Link
 
@@ -31,7 +31,7 @@ var SurveyRespond = React.createClass({
 			e.preventDefault()
 			console.log(e.target[0].value)
 			$.ajax({
-				url: "/api/survey/:"+e.target[0].value,
+				url: "/api/survey/"+e.target[0].value,
 				type: "GET"
 			}).done(function(data) {
 				self.setState({
@@ -53,6 +53,30 @@ var SurveyRespond = React.createClass({
 				}
 			})
 		}
+		// self.setState({
+		// 	survey: {
+		// 		_id: 12345,
+		// 		owner: '',
+		// 		published: false,
+		// 		closed: false,
+		// 		name: 'A Quick Questionaire',
+		// 		questions: [
+		// 			{
+		// 				type: 'text',
+		// 				prompt: 'What is your name?'
+		// 			},
+		// 			{
+		// 				type: 'number',
+		// 				prompt: 'How old are you?'
+		// 			},
+		// 			{
+		// 				type: 'check',
+		// 				prompt: 'Do you like bleu cheese?'
+		// 			}
+		// 		]
+		// 	},
+		// 	submitted: false
+		// })
 	},
 	clearErrors: function() {
 		$('#errorMessage').hide()
@@ -98,7 +122,7 @@ var SurveyRespond = React.createClass({
 		})
 	},
 	render: function() {
-		if (!this.state.survey.id) {
+		if (!this.state.survey._id) {
 			return(
 				<div className="panel panel-default">
 					<div className="panel-body">

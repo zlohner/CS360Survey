@@ -17,7 +17,7 @@ var SurveyCreate = React.createClass({
 			location.href = "#account_login"
 		else
 			this.loadSurvey()
-		
+
 		return {
 			editor: {
 				active: false

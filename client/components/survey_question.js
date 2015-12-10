@@ -1,6 +1,6 @@
 var React = require("react")
 
-var QuestionRespond = React.createClass({
+var SurveyQuestion = React.createClass({
 	getQuestion: function() {
 		return this.props.question
 	},
@@ -31,4 +31,4 @@ var QuestionRespond = React.createClass({
 	}
 })
 
-module.exports = QuestionRespond
+module.exports = SurveyQuestion
