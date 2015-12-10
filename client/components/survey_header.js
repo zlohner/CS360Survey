@@ -22,10 +22,10 @@ var SurveyHeader = React.createClass({
 				<div className="row">
 					<div className="col-md-6">
 						<p>
-							<Link className="btn btn-warning" to="survey_edit">
+							<Link className="btn btn-primary" to="survey_edit">
 							{survey.name} &nbsp;
 							<i> <b>Author:</b> {survey.owner} <b>Status:</b> {published} {status} <b>Question(s):</b> {survey.questions.length} </i>
-							</Link> 
+							</Link>
 						</p>
 					</div>
 				</div>

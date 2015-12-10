@@ -1,4 +1,5 @@
 var React = require("react")
+var ReactRouter = require("react-router")
 
 var SurveyHeader = require("./survey_header.js")
 var Survey = require("./survey.js")
@@ -38,11 +39,11 @@ var SurveyList = React.createClass({
 				}).done(function(survey) {
 					self.surveys.push(survey)
 				}).error(function() {
-					self.context.router.transitionTo("/account_login")
+					location.href = "#account_login"
 				})
 			})
 		}).error(function() {
-			self.context.router.transitionTo("/account_login")
+			location.href = "#account_login"
 		})
 	},
 
