@@ -2,7 +2,6 @@ var React = require("react")
 var ReactRouter = require("react-router")
 
 var SurveyHeader = require("./survey_header.js")
-var Survey = require("./survey.js")
 
 var Link = ReactRouter.Link
 
@@ -43,10 +42,13 @@ var SurveyList = React.createClass({
 	render: function() {
 		if (!$.cookie("username"))
 			location.href = "#account_login"
-		
+
 		var list = this.state.surveys.map(function(survey) {
 			return (
-				<SurveyHeader name={this.name} key={survey._id} survey={survey} />
+				<div>
+					<SurveyHeader name={this.name} key={survey._id} survey={survey} />
+					<br/><br/>
+				</div>
 			)
 		}.bind(this));
 

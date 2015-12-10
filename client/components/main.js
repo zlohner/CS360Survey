@@ -28,6 +28,7 @@ var routes = (
 			<Route name="survey_edit" path="/survey_edit/:id" component={SurveyEdit} />
 			<Route name="survey_create" path="/survey_create" component={SurveyCreate} />
 			<Route name="survey_respond" path="/survey_respond" component={SurveyRespond} />
+			<Route name="survey_respond_id" path="/survey_respond/:id" component={SurveyRespond} />
 		</Route>
 	</Router>
 );

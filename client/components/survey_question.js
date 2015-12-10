@@ -15,7 +15,7 @@ var SurveyQuestion = React.createClass({
 				</div>
 			)
 		}
-		else if (question.type == "check") {
+		else if (question.type == "toggle") {
 			return (
 				<div className="input-group">
 					<span className="input-group-addon" id="basic-addon3">{question.prompt}</span>

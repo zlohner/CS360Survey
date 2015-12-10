@@ -1,7 +1,7 @@
 var React = require("react")
 var ReactRouter = require("react-router")
 
-var QuestionRespond = require("./survey_question.js")
+var SurveyQuestion = require("./survey_question.js")
 
 var Link = ReactRouter.Link
 
@@ -9,6 +9,9 @@ var $ = require("jquery")
 
 var SurveyRespond = React.createClass({
 	getInitialState: function() {
+		if(this.props.params.id)
+			this.getSurvey(this.props.params.id)
+
 		return {
 			survey: {
 				name: '',
@@ -19,40 +22,36 @@ var SurveyRespond = React.createClass({
 	},
 	componentDidMount: function() {
 		this.clearErrors()
-		this.getSurvey()
-		$('#user').focus()
+		$('#surveyID').focus()
 	},
 	reload: function() {
-		this.getSurvey()
+		if(this.props.params.id)
+			this.getSurvey(this.props.params.id)
 	},
-	getSurvey: function(e) {
+	getSurvey: function(id) {
 		var self = this
-		if (e) {
-			e.preventDefault()
-			console.log(e.target[0].value)
-			$.ajax({
-				url: "/api/survey/"+e.target[0].value,
-				type: "GET"
-			}).done(function(data) {
-				self.setState({
-					survey: data.survey,
-					submitted: false
-				})
-			}).error(function(res) {
-				switch(res.status) {
-					case 404:
-						self.appendError("Survey not found")
-						break
-					case 400:
-						self.appendError("Bad Request")
-						break
-					default:
-						self.appendError("Server error")
-						break
-
-				}
+		$.ajax({
+			url: "/api/survey/"+id,
+			type: "GET"
+		}).done(function(data) {
+			self.setState({
+				survey: data,
+				submitted: false
 			})
-		}
+		}).error(function(res) {
+			switch(res.status) {
+				case 404:
+					self.appendError("Survey not found")
+					break
+				case 400:
+					self.appendError("Bad Request")
+					break
+				default:
+					self.appendError("Server error")
+					break
+
+			}
+		})
 		// self.setState({
 		// 	survey: {
 		// 		_id: 12345,
@@ -86,16 +85,25 @@ var SurveyRespond = React.createClass({
 		$('#errorMessage').html($('#errorMessage').html()+newMsg+'<br/>')
 		$('#errorMessage').show()
 	},
+	onSubmitID: function(e) {
+		if(e) {
+			e.preventDefault()
+			if(e.target[0].value) {
+				this.getSurvey(e.target[0].value)
+			}
+		}
+	},
 	onSubmit: function(e) {
 		var self = this
 		e.preventDefault()
 		this.clearErrors()
 		var errors = false
-		var response = []
+		var response = [false]
 		$.ajax({
-			url: "/api/response/:"+self.state.survey._id,
+			url: "/api/response/"+self.state.survey._id,
 			type: "POST",
-			data: response
+			contentType: "application/json",
+			data: JSON.stringify({data: response})
 		}).done(function(){
 			self.setState({
 				submitted: true
@@ -126,25 +134,29 @@ var SurveyRespond = React.createClass({
 			return(
 				<div className="panel panel-default">
 					<div className="panel-body">
-						<form className="form-group" id="surveyIDForm" onSubmit={this.getSurvey}>
+						<form className="form-group" id="surveyIDForm" onSubmit={this.onSubmitID}>
 							<div className="input-group">
 								<span className="input-group-addon" id="basic-addon3">Survey ID: </span>
-								<input type="number" className="form-control" placeholder="Enter Survey ID Here" id="surveyID" aria-describedby="basic-addon1" />
+								<input type="text" className="form-control" placeholder="Enter Survey ID Here" id="surveyID" aria-describedby="basic-addon1" />
 							</div>
 						</form>
+						<div className="alert-danger" id="errorMessage"></div>
 					</div>
 				</div>
 			)
 		}
 		else if (!this.state.submitted) {
+			console.log("here")
 			console.log(this.state.survey)
-			var question_list = this.state.survey.questions.map(function(question) {
-				return (
+			var question_list = []
+			var i = 0
+			this.state.survey.questions.forEach(function(question) {
+				question_list.push(
 					<div>
-						<QuestionRespond question={question} /><br/>
+						<SurveyQuestion key={i++} question={question} /><br/>
 					</div>
 				)
-			}.bind(this));
+			})
 			return (
 				<div className="panel panel-default">
 					<div className="panel-heading">
