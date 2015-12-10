@@ -93,6 +93,11 @@ var SurveyCreate = React.createClass({
 		})
 	},
 
+	editorChangeData: function(data) {
+		this.state.editor.data = data
+
+		this.forceUpdate()
+	},
 	editorClose: function() {
 		this.setState({editor: {
 			active: false
@@ -164,6 +169,26 @@ var SurveyEditWindow = React.createClass({
 		this.props.listener.editorNameSave(data.name)
 	},
 
+	questionChangeType: function(e) {
+		var data
+
+		switch (e.target.value) {
+		case 'text':
+			data = {
+				type: 'text',
+				prompt: ''
+			}
+			break
+		case 'email':
+			data = {
+				type: 'email',
+				prompt: ''
+			}
+			break
+		}
+
+		this.props.listener.editorChangeData(data)
+	},
 	questionSave: function(e) {
 		e.preventDefault()
 		var data = getFormData($(e.target))
@@ -178,24 +203,37 @@ var SurveyEditWindow = React.createClass({
 		var contentPane
 		switch (this.props.type) {
 		case 'question':
+			var questionPane
 			switch (this.props.data.type) {
 			case 'text':
-				contentPane = (
-					<form className="form-horizontal" onSubmit={this.questionSave}>
-						<h2>Edit Question</h2>
+			case 'email':
+				questionPane = (
+					<div>
 						<div className="form-group">
 							<label className="control-label">Prompt</label>
 							<input name="prompt" type="text" className="form-control" defaultValue={this.props.data.prompt} />
 						</div>
-						<div className="form-group">
-							<button type="submit" className="btn btn-info">Save</button>
-							<button onClick={this.questionDelete} className="btn btn-danger">Delete</button>
-						</div>
-						<input type="hidden" name="type" value="text" />
-					</form>
+					</div>
 				)
 				break
 			}
+			contentPane = (
+				<form className="form-horizontal" onSubmit={this.questionSave}>
+					<h2>Edit Question</h2>
+					<div className="form-group">
+						<label className="control-label">Type</label>
+						<select onChange={this.questionChangeType} name="type" className="form-control" value={this.props.data.type}>
+							<option value="text">Text</option>
+							<option value="email">Email</option>
+						</select>
+					</div>
+					{questionPane}
+					<div className="form-group">
+						<button type="submit" className="btn btn-info">Save</button>
+						<button onClick={this.questionDelete} className="btn btn-danger">Delete</button>
+					</div>
+				</form>
+			)
 			break
 		case 'name':
 			contentPane = (
@@ -235,6 +273,7 @@ var SurveyEditQuestion = React.createClass({
 
 		switch (data.type) {
 		case 'text':
+		case 'email':
 			return (
 				<div onClick={this.props.onClick} className="form-group">
 					<label className="control-label">{data.prompt}</label>
