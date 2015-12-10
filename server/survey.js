@@ -23,12 +23,10 @@ function GetSurveysForAccount(req, res) {
 		}).forEach(function(doc) {
 			surveys.push(doc)
 		}, function(err) {
-
 			if (err)
 				res.status(500).send()
 			else
 				res.status(200).json(surveys)
-
 		})
 
 	})
@@ -146,7 +144,7 @@ function DeleteSurvey(req, res) {
 							else
 								res.status(200).send()
 
-						})		
+						})
 					}
 
 				})

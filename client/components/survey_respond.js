@@ -26,29 +26,32 @@ var SurveyRespond = React.createClass({
 		this.getSurvey()
 	},
 	getSurvey: function(e) {
-		e.preventDefault()
-		var id = $("surveyID").val()
-		console.log(id)
-		this.state.survey = {
-			_id: 12345,
-			owner: '',
-			published: false,
-			closed: false,
-			name: 'A Quick Questionaire',
-			questions: [
-				{
-					type: 'text',
-					prompt: 'What is your name?'
-				},
-				{
-					type: 'number',
-					prompt: 'How old are you?'
-				},
-				{
-					type: 'check',
-					prompt: 'Check if you like bleu cheese: ',
+		var self = this
+		if (e) {
+			e.preventDefault()
+			console.log(e.target[0].value)
+			$.ajax({
+				url: "/api/survey/:"+e.target[0].value,
+				type: "GET"
+			}).done(function(data) {
+				self.setState({
+					survey: data.survey,
+					submitted: false
+				})
+			}).error(function(res) {
+				switch(res.status) {
+					case 404:
+						self.appendError("Survey not found")
+						break
+					case 400:
+						self.appendError("Bad Request")
+						break
+					default:
+						self.appendError("Server error")
+						break
+
 				}
-			]
+			})
 		}
 	},
 	clearErrors: function() {
@@ -60,7 +63,6 @@ var SurveyRespond = React.createClass({
 		$('#errorMessage').show()
 	},
 	onSubmit: function(e) {
-		console.log(e)
 		var self = this
 		e.preventDefault()
 		this.clearErrors()
@@ -86,6 +88,9 @@ var SurveyRespond = React.createClass({
 				case 400:
 					self.appendError("Wrong number of fields")
 					break
+				default:
+					self.appendError("Server error")
+					break
 			}
 			self.setState({
 				submitted: true
@@ -97,10 +102,10 @@ var SurveyRespond = React.createClass({
 			return(
 				<div className="panel panel-default">
 					<div className="panel-body">
-						<form className="form-group" id="surveyID" onSubmit={this.getSurvey}>
+						<form className="form-group" id="surveyIDForm" onSubmit={this.getSurvey}>
 							<div className="input-group">
 								<span className="input-group-addon" id="basic-addon3">Survey ID: </span>
-								<input type="number" className="form-control" placeholder="Enter Survey ID Here" aria-describedby="basic-addon1" />
+								<input type="number" className="form-control" placeholder="Enter Survey ID Here" id="surveyID" aria-describedby="basic-addon1" />
 							</div>
 						</form>
 					</div>

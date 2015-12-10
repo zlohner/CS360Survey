@@ -15,8 +15,8 @@ var AccountLogin = React.createClass({
 				<div className="panel-body">
 					<form className="form-group" id="loginForm" onSubmit={this.onSubmit}>
 						<div className="input-group registerElement">
-								<span className="input-group-addon"><i className="glyphicon glyphicon-user"></i></span>
-								<input type="text" className="form-control" placeholder="username" id="user"/>
+							<span className="input-group-addon"><i className="glyphicon glyphicon-user"></i></span>
+							<input type="text" className="form-control" placeholder="username" id="user"/>
 						</div>
 						<div className="input-group registerElement">
 							<span className="input-group-addon"><i className="glyphicon glyphicon-asterisk"></i></span>

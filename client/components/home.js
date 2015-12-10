@@ -4,12 +4,10 @@ var $ = require("jquery")
 
 var Home = React.createClass({
 	componentDidMount: function() {
-		if($.cookie("username")) {
+		if($.cookie("username"))
 			location.href = "#survey_list"
-		}
-		else {
+		else
 			location.href = "#account_login"
-		}
 	},
 	render: function() {
 		return <div/>
