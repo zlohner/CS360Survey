@@ -8,7 +8,7 @@ var Link = ReactRouter.Link
 var account_register = React.createClass({
 	render: function() {
 		return (
-			<div className="panel panel-default">
+			<div className="panel panel-default col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3">
 				<div className="panel-heading">
 					<h1 className="panel-title">Register</h1>
 				</div>
