@@ -50,18 +50,7 @@ var SurveyList = React.createClass({
 		})
 	},
 	createSurvey: function() {
-		var self = this
-
-		$.ajax({
-			url: "/api/survey",
-			type: "POST",
-			data: {
-				name: "New Survey",
-				questions: []
-			}
-		}).done(function(data) {
-
-		})
+		location.href = "#survey_create"
 	},
 	render: function() {
 		var list = this.state.surveys.map(function(survey) {
@@ -74,7 +63,7 @@ var SurveyList = React.createClass({
 			<div className="panel panel-default">
 				<div className="panel-body">
 					{list}
-					<Link className="btn btn-primary" to="survey_edit" onClick={this.createSurvey}>Create New Survey</Link>
+					<Link className="btn btn-primary" to="survey_create" onClick={this.createSurvey}>Create New Survey</Link>
 				</div>
 			</div>
 		)

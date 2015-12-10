@@ -14,22 +14,17 @@ var account_register = React.createClass({
 				</div>
 				<div className="panel-body">
 					<form className="form-group" id="registerForm" onSubmit={this.onSubmit}>
-						<label htmlFor="user">Username:</label>
 						<div className="input-group registerElement">
 							<span className="input-group-addon"><i className="glyphicon glyphicon-user"></i></span>
 							<input type="text" className="form-control" placeholder="username" id="user"/>
 						</div>
-
-						<label htmlFor="pass">Password:</label>
 						<div className="input-group registerElement">
 								<span className="input-group-addon"><i className="glyphicon glyphicon-asterisk"></i></span>
 								<input type="password" className="form-control" placeholder="password" id="pass"/>
 						</div>
-
-						<label htmlFor="passConfirm">Confirm Password:</label>
 						<div className="input-group registerElement">
 								<span className="input-group-addon"><i className="glyphicon glyphicon-asterisk"></i></span>
-								<input type="password" className="form-control" placeholder="password again" id="passConfirm"/>
+								<input type="password" className="form-control" placeholder="confirm password" id="passConfirm"/>
 						</div>
 						<input type="submit" className="btn btn-primary" value="Sign Up"/> or <Link className="btn btn-default" to="account_login">Log In</Link>
 						<div className="alert-danger" id="errorMessage"></div>
