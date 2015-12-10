@@ -12,6 +12,7 @@ var AccountLogin = require("./account_login.js")
 var AccountRegister = require("./account_register.js")
 var SurveyList = require("./survey_list.js")
 var SurveyEdit = require("./survey_edit.js")
+var SurveyCreate = require("./survey_create.js")
 var SurveyRespond = require("./survey_respond.js")
 
 require("../css/app.css")
@@ -23,7 +24,8 @@ var routes = (
 			<Route name="account_login" path="/account_login" component={AccountLogin} />
 			<Route name="account_register" path="/account_register" component={AccountRegister} />
 			<Route name="survey_list" path="/survey_list" component={SurveyList} />
-			<Route name="survey_edit" path="/survey_edit" component={SurveyEdit} />
+			<Route name="survey_edit" path="/survey_edit/:id" component={SurveyEdit} />
+			<Route name="survey_create" path="/survey_create" component={SurveyCreate} />
 			<Route name="survey_respond" path="/survey_respond" component={SurveyRespond} />
 		</Route>
 	</Router>

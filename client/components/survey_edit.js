@@ -1,8 +1,7 @@
 var React = require("react")
 var ReactRouter = require("react-router")
 
-var SurveyHeader = require("./survey_header.js")
-var Survey = require("./survey.js")
+var $ = require('jquery')
 
 var $ = require("jquery")
 require("../../node_modules/jquery.cookie/jquery.cookie.js")
@@ -14,43 +13,74 @@ var SurveyEdit = React.createClass({
 
 	getInitialState: function() {
 		return {
-			survey: {}
+			survey: {
+				name: '',
+				questions: []
+			}
 		}
 	},
 
 	componentDidMount: function() {
-		this.state.survey = this.getSurvey() 
-		if (!$.cookie("username")) {
+		if (!$.cookie("username"))
 			location.href = "#account_login"
-		}
+		else
+			this.getSurvey()
 	},
 
 	reload: function() {
-		this.state.survey = this.getSurvey()
+		this.getSurvey()
 	},
 
 	getSurvey: function() {
-		return {
-			_id: 1,
-			owner: 'Bob',
-			published: false,
-			closed: false,
-			name: 'A Quick Questionaire',
-			questions: [
-				{
-					type: 'text',
-					prompt: 'What is your name?'
-				},
-				{
-					type: 'number',
-					prompt: 'How old are you?'
-				}
-			]
-		}
+		var self = this
+
+		$.ajax({
+			url: '/api/survey/'+this.props.params.id,
+			type: 'GET'
+		}).done(function(data) {
+			self.setState(data)
+		}).error(function() {
+			// redirect to /survey_list
+		})
+		// return {
+		// 	_id: 1,
+		// 	owner: 'ID was '+this.props.params.id,
+		// 	published: false,
+		// 	closed: false,
+		// 	name: 'A Quick Questionaire',
+		// 	questions: [
+		// 		{
+		// 			type: 'text',
+		// 			prompt: 'What is your name?'
+		// 		},
+		// 		{
+		// 			type: 'number',
+		// 			prompt: 'How old are you?'
+		// 		},
+		// 		{
+		// 			type: 'grid',
+		// 			prompt: 'Please rate the following foods:',
+		// 			columns: [
+		// 				'EW GROSS', 'meh', 'pretty good', 'fantastic'
+		// 			],
+		// 			rows: [
+		// 				'burgers', 'fries', 'chicken teriyaki'
+		// 			]
+		// 		}
+		// 	]
+		// }
 	},
 
 	render: function() {
-		this.state.survey = this.getSurvey()
+		var survey = this.state.survey
+		console.log(survey)
+
+		var questions = []
+		var i = 1
+		survey.questions.forEach(function() {
+			questions.push(<li>Question {i++}</li>)
+		})
+
 		return (
 			<div className="panel panel-default">
 				<div className="panel-body">

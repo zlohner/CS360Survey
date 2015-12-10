@@ -34,8 +34,14 @@ function GetSurveysForAccount(req, res) {
 	})
 }
 function GetSurveyByID(req, res) {
+	try {
+		req.params.id = db.id.createFromHexString(req.params.id)
+	} catch (e) {
+		res.status(404).send()
+	}
+
 	db.collection('surveys').findOne({
-		_id: db.id.createFromHexString(req.params.id)
+		_id: req.params.id
 	}, function(err, doc) {
 
 		if (err)
