@@ -11,6 +11,7 @@ var SurveyList = React.createClass({
 	},
 
 	getInitialState: function() {
+		console.log(this)
 		return {
 			surveys: []
 		}
