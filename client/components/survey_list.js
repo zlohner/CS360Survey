@@ -35,24 +35,15 @@ var SurveyList = React.createClass({
 			url: "/api/survey",
 			type: "GET"
 		}).done(function(data) {
-			data.forEach(function(surveyID) {
-				$.ajax({
-					url: "/api/survey/" + surveyID,
-					type: "GET"
-				}).done(function(survey) {
-					self.surveys.push(survey)
-				}).error(function() {
-					location.href = "#account_login"
-				})
-			})
+			self.setState({surveys: data})
 		}).error(function() {
 			location.href = "#account_login"
 		})
 	},
-	createSurvey: function() {
-		location.href = "#survey_create"
-	},
 	render: function() {
+		if (!$.cookie("username"))
+			location.href = "#account_login"
+		
 		var list = this.state.surveys.map(function(survey) {
 			return (
 				<SurveyHeader name={this.name} key={survey._id} survey={survey} />
@@ -63,7 +54,7 @@ var SurveyList = React.createClass({
 			<div className="panel panel-default">
 				<div className="panel-body">
 					{list}
-					<Link className="btn btn-primary" to="survey_create" onClick={this.createSurvey}>Create New Survey</Link>
+					<Link className="btn btn-primary" to="survey_create">Create New Survey</Link>
 				</div>
 			</div>
 		)

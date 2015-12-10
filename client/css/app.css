@@ -7,3 +7,31 @@
 		padding:15px !important;
 		border-radius:5px !important;
 }
+
+.lightbox {
+	display: none;
+	height: 100%;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 1;
+}
+.lightbox.active {
+	display: block;
+}
+.lightbox .backdrop {
+	background: black;
+	height: 100%;
+	opacity: 0.5;
+	position: absolute;
+	width: 100%;
+	z-index: -1;
+}
+.lightbox .content {
+	background: white;
+	border-radius: 3px;
+	margin: 50px auto;
+	padding: 20px;
+	width: 50%;
+}

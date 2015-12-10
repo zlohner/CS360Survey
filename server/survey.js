@@ -225,14 +225,14 @@ function _checkSurveyOwner(surveyID, ownerID, cb) {
 	db.collection('surveys').findOne({
 		_id: surveyID
 	}, {
-		ownerID: 1,
+		owner: 1,
 		published: 1
 	}, function(err, doc) {
 
 		if (err || !doc)
 			cb('ERROR')
 		else
-			cb(null, (doc.ownerID.equals(ownerID)), doc.published)
+			cb(null, (doc.owner.equals(ownerID)), doc.published)
 
 	})
 }

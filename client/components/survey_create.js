@@ -1,39 +1,122 @@
 var React = require("react")
+var $ = require('jquery')
+
+
+function getFormData(form) {
+	var data = {}
+	form.serializeArray().forEach(function(entry) {
+		data[entry.name] = entry.value
+	})
+	return data
+}
+
 
 var SurveyCreate = React.createClass({
 	getInitialState: function() {
-		this.editor = (<SurveyEditWindow />)
-
+		if (!$.cookie("username"))
+			location.href = "#account_login"
+		
 		return {
+			editor: {
+				active: false
+			},
 			survey: {
-				name: 'New Survey',
-				questions: [
-					{
-						type: 'text',
-						prompt: 'What is your favorite color?'
-					}
-				]
+				name: 'Click to Edit Title',
+				questions: []
 			}
 		}
 	},
 
-	editQuestion: function(index) {
+	clickQuestion: function(index) {
 		var self = this
 
-		self.editor.editQuestion(self.state.survey.questions[index], function(data) {
-			self.state.survey.questions[index] = data
-			self.forceUpdate()
+		self.setState({editor: {
+			active: true,
+			type: 'question',
+			data: self.state.survey.questions[index],
+			listener: self,
+			index: index
+		}})
+	},
+	clickName: function() {
+		var self = this
+
+		self.setState({editor: {
+			active: true,
+			type: 'name',
+			data: self.state.survey.name,
+			listener: self
+		}})
+	},
+	addQuestion: function() {
+		var index = this.state.survey.questions.length
+		this.state.survey.questions.push({
+			type: 'text',
+			prompt: ''
+		})
+
+		this.setState({editor: {
+			active: true,
+			type: 'question',
+			data: this.state.survey.questions[index],
+			listener: this,
+			index: index
+		}})
+	},
+
+	saveSurvey: function(cb) {
+		$.ajax({
+			url: '/api/survey',
+			method: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify(this.state.survey)
+		}).done(function(data) {
+			if (typeof(cb) == 'function')
+				cb(data)
+			else
+				alert('Saved successfully.')
+		}).error(function() {
+			alert('There was a problem saving your changes!')
 		})
 	},
-	editName: function() {
-		var self = this
+	publishSurvey: function() {
+		if (!confirm('Once your survey is published, it cannot be edited!'))
+			return
 
-		console.log(self.editor)
-
-		self.editor.editName(self.state.survey.name, function(data) {
-			self.state.survey.name = data
-			self.forceUpdate()
+		this.saveSurvey(function(id) {
+			$.ajax({
+				url: '/api/survey/open/'+id,
+				method: 'POST'
+			}).done(function() {
+				alert('Your survey has been published.')
+				location.href = '#survey_list'
+			}).error(function() {
+				alert('There was a problem publishing your survey!')
+			})
 		})
+	},
+
+	editorChangeData: function(data) {
+		this.state.editor.data = data
+
+		this.forceUpdate()
+	},
+	editorClose: function() {
+		this.setState({editor: {
+			active: false
+		}})
+	},
+	editorNameSave: function(data) {
+		this.state.survey.name = data
+		this.setState({editor: {active: false}})
+	},
+	editorQuestionSave: function(data) {
+		this.state.survey.questions[this.state.editor.index] = data
+		this.setState({editor: {active:false}})
+	},
+	editorQuestionDelete: function() {
+		this.state.survey.questions.splice(this.state.editor.index, 1)
+		this.setState({editor: {active:false}})
 	},
 
 	render: function() {
@@ -44,62 +127,139 @@ var SurveyCreate = React.createClass({
 		var i = 0
 		survey.questions.forEach(function(question) {
 			questions.push(
-				<SurveyEditQuestion onClick={self.editQuestion.bind(self, i)} data={question} key={i} />
+				<SurveyEditQuestion onClick={self.clickQuestion.bind(self, i)} data={question} key={i} />
 			)
 			i++
 		})
 
 		return (
 			<div className = "view">
-				{self.editor}
 				<div className = "well">
-					<SurveyEditTitle onClick={self.editName} name={survey.name} />
+					<button onClick={this.saveSurvey} className="btn btn-info">Save Changes</button>
+					<span> </span>
+					<button onClick={this.publishSurvey} className="btn btn-success">Publish Survey</button>
+					<SurveyEditTitle onClick={self.clickName} name={survey.name} />
 					<div className="form-horizontal">
 						{questions}
+						<div className="form-group">
+							<button onClick={this.addQuestion} className="btn btn-warning">Add Question</button>
+						</div>
 					</div>
 				</div>
+				<SurveyEditWindow {...this.state.editor} />
 			</div>
 		)
 	}
 })
 
 var SurveyEditWindow = React.createClass({
-	getInitialState: function() {
-		this.inner = (
-			<div className="inner"></div>
-		)
-		this.container = (
-			<div className="lightbox">
-				<div className="outer" onClick={this.handleClose}></div>
-				{this.inner}
+	componentDidMount: function() {
+		var el = $('.lightbox')
+		el.find('input').first().focus()
+	},
+
+
+	blockClose: function() {
+		return false
+	},
+	handleClose: function() {
+		this.props.listener.editorClose()
+	},
+
+	nameSave: function(e) {
+		e.preventDefault()
+		var data = getFormData($(e.target))
+		this.props.listener.editorNameSave(data.name)
+	},
+
+	questionChangeType: function(e) {
+		var data
+
+		switch (e.target.value) {
+		case 'text':
+			data = {
+				type: 'text',
+				prompt: ''
+			}
+			break
+		case 'email':
+			data = {
+				type: 'email',
+				prompt: ''
+			}
+			break
+		}
+
+		this.props.listener.editorChangeData(data)
+	},
+	questionSave: function(e) {
+		e.preventDefault()
+		var data = getFormData($(e.target))
+		this.props.listener.editorQuestionSave(data)
+	},
+	questionDelete: function(e) {
+		this.props.listener.editorQuestionDelete()
+		return false
+	},
+
+	render: function() {
+		var contentPane
+		switch (this.props.type) {
+		case 'question':
+			var questionPane
+			switch (this.props.data.type) {
+			case 'text':
+			case 'email':
+				questionPane = (
+					<div>
+						<div className="form-group">
+							<label className="control-label">Prompt</label>
+							<input name="prompt" type="text" className="form-control" defaultValue={this.props.data.prompt} />
+						</div>
+					</div>
+				)
+				break
+			}
+			contentPane = (
+				<form className="form-horizontal" onSubmit={this.questionSave}>
+					<h2>Edit Question</h2>
+					<div className="form-group">
+						<label className="control-label">Type</label>
+						<select onChange={this.questionChangeType} name="type" className="form-control" value={this.props.data.type}>
+							<option value="text">Text</option>
+							<option value="email">Email</option>
+						</select>
+					</div>
+					{questionPane}
+					<div className="form-group">
+						<button type="submit" className="btn btn-info">Save</button>
+						<button onClick={this.questionDelete} className="btn btn-danger">Delete</button>
+					</div>
+				</form>
+			)
+			break
+		case 'name':
+			contentPane = (
+				<form className="form-horizontal" onSubmit={this.nameSave}>
+					<h2>Edit Survey Name</h2>
+					<div className="form-group">
+						<label className="control-label">Survey Title</label>
+						<input name="name" type="text" className="form-control" defaultValue={this.props.data} />
+					</div>
+					<div className="form-group">
+						<button type="submit" className="btn btn-info">Save</button>
+					</div>
+				</form>
+			)
+			break
+		}
+
+		return (
+			<div className={'lightbox'+(this.props.active?' active':'')}>
+				<div className="backdrop" onClick={this.handleClose}></div>
+				<div className="content" onClick={this.blockClose}>{contentPane}</div>
 			</div>
 		)
-
-		return {
-			active: false
-		}
-	},
-
-	editQuestion: function(question, cb) {
-
-	},
-	editName: function(name, cb) {
-		console.log(this.inner)
-	},
-
-	handleClose: function() {
-		var self = this
-
-		// fade out this.container
-		setTimeout(function() {
-			self.setState({active: false})
-		})
-	},
-	render: function() {
-		if (this.state.active)
-			return this.container
-		else
-			return (<div></div>)
 	}
 })
 
@@ -116,6 +276,7 @@ var SurveyEditQuestion = React.createClass({
 
 		switch (data.type) {
 		case 'text':
+		case 'email':
 			return (
 				<div onClick={this.props.onClick} className="form-group">
 					<label className="control-label">{data.prompt}</label>

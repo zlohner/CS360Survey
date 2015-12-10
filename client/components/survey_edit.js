@@ -1,94 +1,309 @@
 var React = require("react")
-var ReactRouter = require("react-router")
-
 var $ = require('jquery')
 
-var $ = require("jquery")
-require("../../node_modules/jquery.cookie/jquery.cookie.js")
 
-var SurveyEdit = React.createClass({
-	contextTypes: {
-		router: React.PropTypes.func
-	},
+function getFormData(form) {
+	var data = {}
+	form.serializeArray().forEach(function(entry) {
+		data[entry.name] = entry.value
+	})
+	return data
+}
 
+
+var SurveyCreate = React.createClass({
 	getInitialState: function() {
+		if (!$.cookie("username"))
+			location.href = "#account_login"
+		else
+			this.loadSurvey()
+		
 		return {
+			editor: {
+				active: false
+			},
 			survey: {
 				name: '',
 				questions: []
 			}
 		}
 	},
-
-	componentDidMount: function() {
-		if (!$.cookie("username"))
-			location.href = "#account_login"
-		else
-			this.getSurvey()
-	},
-
-	reload: function() {
-		this.getSurvey()
-	},
-
-	getSurvey: function() {
+	loadSurvey: function() {
 		var self = this
 
 		$.ajax({
 			url: '/api/survey/'+this.props.params.id,
-			type: 'GET'
+			method: 'GET'
 		}).done(function(data) {
-			self.setState(data)
+			if (data.published)
+				location.href = '#survey_review/'+data._id
+			else
+				self.setState({survey: data})
 		}).error(function() {
-			// redirect to /survey_list
+			location.href = '#survey_list'
 		})
-		// return {
-		// 	_id: 1,
-		// 	owner: 'ID was '+this.props.params.id,
-		// 	published: false,
-		// 	closed: false,
-		// 	name: 'A Quick Questionaire',
-		// 	questions: [
-		// 		{
-		// 			type: 'text',
-		// 			prompt: 'What is your name?'
-		// 		},
-		// 		{
-		// 			type: 'number',
-		// 			prompt: 'How old are you?'
-		// 		},
-		// 		{
-		// 			type: 'grid',
-		// 			prompt: 'Please rate the following foods:',
-		// 			columns: [
-		// 				'EW GROSS', 'meh', 'pretty good', 'fantastic'
-		// 			],
-		// 			rows: [
-		// 				'burgers', 'fries', 'chicken teriyaki'
-		// 			]
-		// 		}
-		// 	]
-		// }
+	},
+
+	clickQuestion: function(index) {
+		var self = this
+
+		self.setState({editor: {
+			active: true,
+			type: 'question',
+			data: self.state.survey.questions[index],
+			listener: self,
+			index: index
+		}})
+	},
+	clickName: function() {
+		var self = this
+
+		self.setState({editor: {
+			active: true,
+			type: 'name',
+			data: self.state.survey.name,
+			listener: self
+		}})
+	},
+	addQuestion: function() {
+		var index = this.state.survey.questions.length
+		this.state.survey.questions.push({
+			type: 'text',
+			prompt: ''
+		})
+
+		this.setState({editor: {
+			active: true,
+			type: 'question',
+			data: this.state.survey.questions[index],
+			listener: this,
+			index: index
+		}})
+	},
+
+	saveSurvey: function(cb) {
+		$.ajax({
+			url: '/api/survey/'+this.props.params.id,
+			method: 'PUT',
+			contentType: 'application/json',
+			data: JSON.stringify(this.state.survey)
+		}).done(function() {
+			if (typeof(cb) == 'function')
+				cb()
+			else
+				alert('Saved successfully.')
+		}).error(function() {
+			alert('There was a problem saving your changes!')
+		})
+	},
+	publishSurvey: function() {
+		if (!confirm('Once your survey is published, it cannot be edited!'))
+			return
+
+		var self = this
+
+		self.saveSurvey(function(i) {
+			$.ajax({
+				url: '/api/survey/open/'+self.props.params.id,
+				method: 'POST'
+			}).done(function() {
+				alert('Your survey has been published.')
+				location.href = '#survey_list'
+			}).error(function() {
+				alert('There was a problem publishing your survey!')
+			})
+		})
+	},
+
+	editorChangeData: function(data) {
+		this.state.editor.data = data
+
+		this.forceUpdate()
+	},
+	editorClose: function() {
+		this.setState({editor: {
+			active: false
+		}})
+	},
+	editorNameSave: function(data) {
+		this.state.survey.name = data
+		this.setState({editor: {active: false}})
+	},
+	editorQuestionSave: function(data) {
+		this.state.survey.questions[this.state.editor.index] = data
+		this.setState({editor: {active:false}})
+	},
+	editorQuestionDelete: function() {
+		this.state.survey.questions.splice(this.state.editor.index, 1)
+		this.setState({editor: {active:false}})
 	},
 
 	render: function() {
-		var survey = this.state.survey
-		console.log(survey)
+		var self = this
+		var survey = self.state.survey
 
 		var questions = []
-		var i = 1
-		survey.questions.forEach(function() {
-			questions.push(<li>Question {i++}</li>)
+		var i = 0
+		survey.questions.forEach(function(question) {
+			questions.push(
+				<SurveyEditQuestion onClick={self.clickQuestion.bind(self, i)} data={question} key={i} />
+			)
+			i++
 		})
 
 		return (
-			<div className="panel panel-default">
-				<div className="panel-body">
-					<SurveyHeader name={this.name} key={this.state.survey._id} survey={this.state.survey} />
+			<div className = "view">
+				<div className = "well">
+					<button onClick={this.saveSurvey} className="btn btn-info">Save Changes</button>
+					<span> </span>
+					<button onClick={this.publishSurvey} className="btn btn-success">Publish Survey</button>
+					<SurveyEditTitle onClick={self.clickName} name={survey.name} />
+					<div className="form-horizontal">
+						{questions}
+						<div className="form-group">
+							<button onClick={this.addQuestion} className="btn btn-warning">Add Question</button>
+						</div>
+					</div>
 				</div>
+				<SurveyEditWindow {...this.state.editor} />
 			</div>
 		)
 	}
 })
 
-module.exports = SurveyEdit
+var SurveyEditWindow = React.createClass({
+	componentDidMount: function() {
+		var el = $('.lightbox')
+		el.find('input').first().focus()
+	},
+
+
+	blockClose: function() {
+		return false
+	},
+	handleClose: function() {
+		this.props.listener.editorClose()
+	},
+
+	nameSave: function(e) {
+		e.preventDefault()
+		var data = getFormData($(e.target))
+		this.props.listener.editorNameSave(data.name)
+	},
+
+	questionChangeType: function(e) {
+		var data
+
+		switch (e.target.value) {
+		case 'text':
+			data = {
+				type: 'text',
+				prompt: ''
+			}
+			break
+		case 'email':
+			data = {
+				type: 'email',
+				prompt: ''
+			}
+			break
+		}
+
+		this.props.listener.editorChangeData(data)
+	},
+	questionSave: function(e) {
+		e.preventDefault()
+		var data = getFormData($(e.target))
+		this.props.listener.editorQuestionSave(data)
+	},
+	questionDelete: function(e) {
+		this.props.listener.editorQuestionDelete()
+		return false
+	},
+
+	render: function() {
+		var contentPane
+		switch (this.props.type) {
+		case 'question':
+			var questionPane
+			switch (this.props.data.type) {
+			case 'text':
+			case 'email':
+				questionPane = (
+					<div>
+						<div className="form-group">
+							<label className="control-label">Prompt</label>
+							<input name="prompt" type="text" className="form-control" defaultValue={this.props.data.prompt} />
+						</div>
+					</div>
+				)
+				break
+			}
+			contentPane = (
+				<form className="form-horizontal" onSubmit={this.questionSave}>
+					<h2>Edit Question</h2>
+					<div className="form-group">
+						<label className="control-label">Type</label>
+						<select onChange={this.questionChangeType} name="type" className="form-control" value={this.props.data.type}>
+							<option value="text">Text</option>
+							<option value="email">Email</option>
+						</select>
+					</div>
+					{questionPane}
+					<div className="form-group">
+						<button type="submit" className="btn btn-info">Save</button>
+						<button onClick={this.questionDelete} className="btn btn-danger">Delete</button>
+					</div>
+				</form>
+			)
+			break
+		case 'name':
+			contentPane = (
+				<form className="form-horizontal" onSubmit={this.nameSave}>
+					<h2>Edit Survey Name</h2>
+					<div className="form-group">
+						<label className="control-label">Survey Title</label>
+						<input name="name" type="text" className="form-control" defaultValue={this.props.data} />
+					</div>
+					<div className="form-group">
+						<button type="submit" className="btn btn-info">Save</button>
+					</div>
+				</form>
+			)
+			break
+		}
+
+		return (
+			<div className={'lightbox'+(this.props.active?' active':'')}>
+				<div className="backdrop" onClick={this.handleClose}></div>
+				<div className="content" onClick={this.blockClose}>{contentPane}</div>
+			</div>
+		)
+	}
+})
+
+var SurveyEditTitle = React.createClass({
+	render: function() {
+		return (
+			<h1 onClick={this.props.onClick}>{this.props.name}</h1>
+		)
+	}
+})
+var SurveyEditQuestion = React.createClass({
+	render: function() {
+		var data = this.props.data
+
+		switch (data.type) {
+		case 'text':
+		case 'email':
+			return (
+				<div onClick={this.props.onClick} className="form-group">
+					<label className="control-label">{data.prompt}</label>
+					<input type="text" className="form-control" />
+				</div>
+			)
+		}
+	}
+})
+
+module.exports = SurveyCreate

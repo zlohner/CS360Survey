@@ -17,9 +17,8 @@ var SurveyHeader = React.createClass({
 				status = "- Closed"
 			}
 		}
-		var edit_route = "survey_edit/"+survey._id
 		return (
-			<Link className="btn btn-primary" to={edit_route}>
+			<Link className="btn btn-primary" to={(survey.published?'survey_review':'survey_edit')+'/'+survey._id}>
 			<b>{survey.name}</b> &nbsp; - &nbsp;
 			<i> <b>Author:</b> {survey.owner} &nbsp; <b>Status:</b> {published} {status} &nbsp; <b>Question(s):</b> {survey.questions.length} </i>
 			</Link>
