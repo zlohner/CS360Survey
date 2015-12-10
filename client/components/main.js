@@ -14,7 +14,7 @@ var SurveyList = require("./survey_list.js")
 var SurveyEdit = require("./survey_edit.js")
 var SurveyCreate = require("./survey_create.js")
 var SurveyRespond = require("./survey_respond.js")
-
+var SurveyReview = require("./survey_review.js") 
 require("../css/app.css")
 
 var routes = (
@@ -28,6 +28,7 @@ var routes = (
 			<Route name="survey_edit" path="/survey_edit/:id" component={SurveyEdit} />
 			<Route name="survey_create" path="/survey_create" component={SurveyCreate} />
 			<Route name="survey_respond" path="/survey_respond" component={SurveyRespond} />
+			<Route name="survey_review" path="/survey_review/:id" component={SurveyReview} /> 
 		</Route>
 	</Router>
 );
