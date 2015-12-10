@@ -3,7 +3,7 @@ var ReactRouter = require("react-router")
 var History = ReactRouter.History
 
 var $ = require('jquery')
-require("../../node_modules/jquery.cookie/jquery.cookie.js")  
+require("../../node_modules/jquery.cookie/jquery.cookie.js")
 
 var App = React.createClass({
 	render: function() {
@@ -18,17 +18,18 @@ var App = React.createClass({
 								<span className="icon-bar"></span>
 								<span className="icon-bar"></span>
 							</button>
-							<a className="navbar-brand" href="/">Survey</a>
+							<a className="navbar-brand" href="/">Home</a>
 						</div>
 						<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 							<ul className="nav navbar-nav">
-								<li><a href="#/account_register">account</a></li>
-								<li><a href="#/survey_list">list</a></li>
+								<li><a href="#/survey_list">surveys</a></li>
 								<li><a href="#/survey_edit">edit</a></li>
+								<li><a href="#/survey_respond">respond</a></li>
 							</ul>
 							<ul className="nav navbar-nav pull-right" id="loginButton">
+									<li><a href="#/account_register">account</a></li>
 									<li><a href="" onClick={this.handleLoginStatus} id="loginStatus">{this.getLoginStatus()}</a></li>
-							</ul> 
+							</ul>
 						</div>
 					</div>
 				</nav>
@@ -42,9 +43,9 @@ var App = React.createClass({
 	getLoginStatus: function() {
 		var userCookie = $.cookie('username')
 		if(userCookie) {
-				return 'logout'
+			return 'logout'
 		} else {
-				return 'login' 
+			return 'login'
 		}
 
 	},
@@ -53,12 +54,12 @@ var App = React.createClass({
 				location.href = '#'
 		} else if(this.getLoginStatus() == 'logout') {
 				$.removeCookie('auth')
-				$.removeCookie('username') 
-				location.href = '#' 
-		}  
-		
-		$('#loginStatus').html(this.getLoginStatus()) 
-	} 
+				$.removeCookie('username')
+				location.href = '#'
+		}
+
+		$('#loginStatus').html(this.getLoginStatus())
+	}
 });
 
 module.exports = App

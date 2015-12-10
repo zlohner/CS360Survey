@@ -1,7 +1,10 @@
 var React = require("react")
+var ReactRouter = require("react-router")
 
 var SurveyHeader = require("./survey_header.js")
 var Survey = require("./survey.js")
+
+var Link = ReactRouter.Link
 
 var $ = require("jquery")
 
@@ -39,11 +42,11 @@ var SurveyList = React.createClass({
 				}).done(function(survey) {
 					self.surveys.push(survey)
 				}).error(function() {
-					self.context.router.transitionTo("/account_login")
+					location.href = "#account_login"
 				})
 			})
 		}).error(function() {
-			self.context.router.transitionTo("/account_login")
+			location.href = "#account_login"
 		})
 	},
 
@@ -58,6 +61,7 @@ var SurveyList = React.createClass({
 			<div className="panel panel-default">
 				<div className="panel-body">
 					{list}
+					<Link className="btn btn-primary" to="survey_edit">Create New Survey</Link>
 				</div>
 			</div>
 		)

@@ -1,8 +1,16 @@
 var React = require("react")
+var ReactRouter = require("react-router")
 
 var $ = require('jquery')
 
+var $ = require("jquery")
+require("../../node_modules/jquery.cookie/jquery.cookie.js")
+
 var SurveyEdit = React.createClass({
+	contextTypes: {
+		router: React.PropTypes.func
+	},
+
 	getInitialState: function() {
 		return {
 			survey: {
@@ -13,7 +21,10 @@ var SurveyEdit = React.createClass({
 	},
 
 	componentDidMount: function() {
-		this.getSurvey()
+		if (!$.cookie("username"))
+			location.href = "#account_login"
+		else
+			this.getSurvey()
 	},
 
 	reload: function() {
@@ -71,11 +82,10 @@ var SurveyEdit = React.createClass({
 		})
 
 		return (
-			<div className = "view">
-				<h1>{survey.name}</h1>
-				<ol>
-					{questions}
-				</ol>
+			<div className="panel panel-default">
+				<div className="panel-body">
+					<SurveyHeader name={this.name} key={this.state.survey._id} survey={this.state.survey} />
+				</div>
 			</div>
 		)
 	}

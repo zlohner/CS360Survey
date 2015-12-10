@@ -1,6 +1,6 @@
 var React = require("react")
 
-var Question = React.createClass({
+var QuestionCreate = React.createClass({
 	render: function() {
 		return (
 			<div className = "view">
@@ -10,4 +10,4 @@ var Question = React.createClass({
 	}
 })
 
-module.exports = Question
+module.exports = QuestionCreate
