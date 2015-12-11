@@ -9,8 +9,33 @@ module.exports = function(app) {
 
 	app.post('/api/survey/open/:id', OpenSurvey)	// start accepting responses
 	app.post('/api/survey/close/:id', CloseSurvey)	// stop accepting responses
+	app.post('/api/survey/review/:id', ReviewSurvey) 
 }
 
+function ReviewSurvey(req, res) {
+	var surveyId = req.params.id 
+	surveyId = db.id.createFromHexString(surveyId)
+
+	req.auth.mustBeLoggedIn(res, function(accountID) {
+	
+	var result = {} 
+	db.collection('responses').count({survey:surveyId}, function(err,count)	{
+				if(err) {
+					res.status(500).send() 
+				} else {
+					db.collection('surveys').findOne({_id:surveyId}, function(err,doc) {
+						if(err) 
+							res.status(500).send() 
+						else if(!doc)
+							res.status(404).send()
+						else 
+							res.status(200).json({count:count,name:doc.name})
+					}) 					
+				} 
+		})  
+	})  
+
+} 
 
 
 function GetSurveysForAccount(req, res) {
