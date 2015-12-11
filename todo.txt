@@ -1,9 +1,1 @@
-M	edit page for survey
 C	results page for survey
-Z	take a survey
-Z	submit a survey
-
-Z	get responses (paginated)
-C	get survey stats
-
-Z	wiki documentation

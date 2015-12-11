@@ -89,7 +89,7 @@ var account_register = React.createClass({
 					switch(statusCode) {
 						case 200:
 						//Redirect to home for now
-						location.href='#survey_edit'
+						location.href='#account_login'
 						break
 
 						case 409:
