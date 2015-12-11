@@ -31,12 +31,12 @@ var SurveyReview = React.createClass({
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-						<h1 className="panel-title">Survey Results for <strong>{this.name}</strong></h1> 
+						<h1 className="panel-title">Survey Results for {this.name}</h1> 
 		    </div> 
 				<div className="panel-body">
-						<h4>Completed Responses: <strong>{this.count}</strong></h4> 
+						<h4>Number of Responses: <strong>{this.count}</strong></h4> 
 						<br/><br/>
-						<h4>Survey Link: <strong>{this.link}</strong></h4> 
+						<h4>Survey Link: <strong><a href={this.link}>{this.link}</a></strong></h4> 
 				</div>
 			</div>
 		)
