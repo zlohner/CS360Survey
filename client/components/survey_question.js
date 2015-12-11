@@ -1,25 +1,47 @@
 var React = require("react")
 
 var SurveyQuestion = React.createClass({
-	getQuestion: function() {
-		return this.props.question
+	getInitialState: function() {
+		return {
+			value: 0
+		}
+	},
+	componentDidMount: function() {
+
+	},
+	reload: function() {
+
+	},
+	onChange: function(e) {
+		this.setState({
+			value: e.target.value
+		})
 	},
 	render: function() {
 		var self = this
 		var question = this.props.question
-		if (question.type == "text" || question.type == "number") {
+		if (question.type == "text") {
 			return (
 				<div className="input-group">
-					<span className="input-group-addon" id="basic-addon3">{question.prompt}</span>
-					<input type={question.type} className="form-control" placeholder="type your answer here" aria-describedby="basic-addon1" />
+					<span className="input-group-addon">{question.prompt}</span>
+					<input id="answer" type="text" className="form-control" placeholder="type your answer here" />
+				</div>
+			)
+		}
+		else if (question.type == "number") {
+			return (
+				<div className="input-group">
+					<span className="input-group-addon">{question.prompt}</span>
+					<input id="answer" type="range" min={question.min} max={question.max} step="1" className="form-control" onChange={this.onChange}/>
+					<span className="input-group-addon">{this.state.value}</span>
 				</div>
 			)
 		}
 		else if (question.type == "toggle") {
 			return (
 				<div className="input-group">
-					<span className="input-group-addon" id="basic-addon3">{question.prompt}</span>
-					<span className="input-group-addon"><input type="checkbox" aria-label="..." /></span>
+					<span className="input-group-addon">{question.prompt}</span>
+					<span className="input-group-addon"><input id="answer" type="checkbox" /></span>
 				</div>
 			)
 		}

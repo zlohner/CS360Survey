@@ -1,4 +1,5 @@
 var React = require("react")
+
 var $ = require('jquery')
 
 
@@ -146,7 +147,7 @@ var SurveyCreate = React.createClass({
 		var i = 0
 		survey.questions.forEach(function(question) {
 			questions.push(
-				<SurveyEditQuestion onClick={self.clickQuestion.bind(self, i)} data={question} key={i} />
+				<SurveyEditQuestion onClick={self.clickQuestion.bind(self, i)} key={i} data={question} />
 			)
 			i++
 		})

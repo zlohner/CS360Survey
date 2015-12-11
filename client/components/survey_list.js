@@ -11,22 +11,18 @@ var SurveyList = React.createClass({
 	contextTypes: {
 		router: React.PropTypes.func
 	},
-
 	getInitialState: function() {
 		console.log(this)
 		return {
 			surveys: []
 		}
 	},
-
 	componentDidMount: function() {
 		this.getSurveys()
 	},
-
 	reload: function() {
 		this.getSurveys()
 	},
-
 	getSurveys: function(status, data) {
 		var self = this
 
@@ -36,7 +32,7 @@ var SurveyList = React.createClass({
 		}).done(function(data) {
 			self.setState({surveys: data})
 		}).error(function() {
-			location.href = "#account_login"
+			// handle
 		})
 	},
 	render: function() {

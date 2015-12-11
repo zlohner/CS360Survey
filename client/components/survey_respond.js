@@ -9,11 +9,9 @@ var $ = require("jquery")
 
 var SurveyRespond = React.createClass({
 	getInitialState: function() {
-		if(this.props.params.id)
-			this.getSurvey(this.props.params.id)
-
 		return {
 			survey: {
+				_id: -1,
 				name: '',
 				questions: []
 			},
@@ -21,11 +19,13 @@ var SurveyRespond = React.createClass({
 		}
 	},
 	componentDidMount: function() {
+		if(this.props.params.id != this.state.survey._id)
+			this.getSurvey(this.props.params.id)
 		this.clearErrors()
 		$('#surveyID').focus()
 	},
 	reload: function() {
-		if(this.props.params.id)
+		if(this.props.params.id != this.state.survey._id)
 			this.getSurvey(this.props.params.id)
 	},
 	getSurvey: function(id) {
@@ -49,7 +49,6 @@ var SurveyRespond = React.createClass({
 				default:
 					self.appendError("Server error")
 					break
-
 			}
 		})
 		// self.setState({
@@ -109,7 +108,6 @@ var SurveyRespond = React.createClass({
 				submitted: true
 			})
 		}).error(function(res){
-			console.log(res)
 			switch(res.status) {
 				case 404:
 					self.appendError("Survey not found")
@@ -124,13 +122,10 @@ var SurveyRespond = React.createClass({
 					self.appendError("Server error")
 					break
 			}
-			self.setState({
-				submitted: true
-			})
 		})
 	},
 	render: function() {
-		if (!this.state.survey._id) {
+		if (this.state.survey._id == -1) {
 			return(
 				<div className="panel panel-default">
 					<div className="panel-body">
@@ -146,14 +141,12 @@ var SurveyRespond = React.createClass({
 			)
 		}
 		else if (!this.state.submitted) {
-			console.log("here")
-			console.log(this.state.survey)
 			var question_list = []
 			var i = 0
 			this.state.survey.questions.forEach(function(question) {
 				question_list.push(
-					<div>
-						<SurveyQuestion key={i++} question={question} /><br/>
+					<div key={i++}>
+						<SurveyQuestion question={question} /><br/>
 					</div>
 				)
 			})
