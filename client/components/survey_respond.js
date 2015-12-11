@@ -61,6 +61,7 @@ var SurveyRespond = React.createClass({
 		$('#errorMessage').show()
 	},
 	onSubmitID: function(e) {
+		this.clearErrors()
 		if(e) {
 			e.preventDefault()
 			if(e.target[0].value) {
@@ -74,6 +75,15 @@ var SurveyRespond = React.createClass({
 		this.clearErrors()
 		var errors = false
 		var responses = []
+		for (var i = 0; i < this.state.survey.questions.length; i++) {
+			var nextAnswer = $("#answer"+i)[0]
+			if (nextAnswer.type == "radio") {
+				responses.push(nextAnswer.checked)
+			}
+			else {
+				responses.push(nextAnswer.value)
+			}
+		}
 		$.ajax({
 			url: "/api/response/"+self.state.survey._id,
 			type: "POST",
@@ -111,7 +121,7 @@ var SurveyRespond = React.createClass({
 								<input type="text" className="form-control" placeholder="Enter Survey ID Here" id="surveyID" aria-describedby="basic-addon1" />
 							</div>
 						</form>
-						<div className="alert-danger" id="errorMessage"></div>
+						<div className="alert-danger" id="errorMessage1"></div>
 					</div>
 				</div>
 			)
@@ -121,10 +131,11 @@ var SurveyRespond = React.createClass({
 			var i = 0
 			this.state.survey.questions.forEach(function(question) {
 				question_list.push(
-					<div key={i++}>
-						<SurveyQuestion question={question} /><br/>
+					<div key={i}>
+						<SurveyQuestion question={question} qnum={i} /><br/>
 					</div>
 				)
+				i++
 			})
 			return (
 				<div className="panel panel-default">
@@ -135,7 +146,6 @@ var SurveyRespond = React.createClass({
 						<form className="form-group" id="surveyForm" onSubmit={this.onSubmit}>
 							{question_list}
 							<input type="submit" className="btn btn-primary" value="Submit"/>
-							<div className="alert-danger" id="errorMessage"></div>
 						</form>
 					</div>
 				</div>

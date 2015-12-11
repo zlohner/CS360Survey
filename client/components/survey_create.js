@@ -136,14 +136,14 @@ var SurveyCreate = React.createClass({
 		return (
 			<div className = "view">
 				<div className = "well">
-					<button onClick={this.saveSurvey} className="btn btn-info">Save Changes</button>
+					<button onClick={this.saveSurvey} className="btn btn-primary">Save Changes</button>
 					<span> </span>
 					<button onClick={this.publishSurvey} className="btn btn-success">Publish Survey</button>
 					<SurveyEditTitle onClick={self.clickName} name={survey.name} />
 					<div className="form-horizontal">
 						{questions}
 						<div className="form-group">
-							<button onClick={this.addQuestion} className="btn btn-warning">Add Question</button>
+							<button onClick={this.addQuestion} className="btn btn-primary">Add Question</button>
 						</div>
 					</div>
 				</div>
