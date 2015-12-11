@@ -12,7 +12,6 @@ var SurveyList = React.createClass({
 		router: React.PropTypes.func
 	},
 	getInitialState: function() {
-		console.log(this)
 		return {
 			surveys: []
 		}

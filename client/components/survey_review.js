@@ -6,21 +6,21 @@ var $ = require("jquery")
 var SurveyReview = React.createClass({
 
 	getInitialState: function() {
-		this.surveyId = this.props.params.id  
+		this.surveyId = this.props.params.id
 		this.getSurveyResult()
-		return {} 		
+		return {}
 	},
 
 	getSurveyResult: function() {
-		var self = this 
+		var self = this
 		$.ajax({
 			url: "/api/survey/review/"+this.surveyId,
 			type: "POST"
 		}).done(function(data) {
-				self.count= data.count   
-				self.name = data.name 
-				self.link = window.location.protocol+"//"+window.location.host+"/#/survey_respond/"+self.surveyId 
-				self.forceUpdate() 
+				self.count= data.count
+				self.name = data.name
+				self.link = window.location.protocol+"//"+window.location.host+"/#/survey_respond/"+self.surveyId
+				self.forceUpdate()
 		}).error(function() {
 			location.href = "#account_login"
 		})
@@ -31,16 +31,16 @@ var SurveyReview = React.createClass({
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-						<h1 className="panel-title">Survey Results for {this.name}</h1> 
-		    </div> 
+						<h1 className="panel-title">Survey Results for {this.name}</h1>
+				</div>
 				<div className="panel-body">
-						<h4>Number of Responses: <strong>{this.count}</strong></h4> 
+						<h4>Number of Responses: <strong>{this.count}</strong></h4>
 						<br/><br/>
-						<h4>Survey Link: <strong><a href={this.link}>{this.link}</a></strong></h4> 
+						<h4>Survey Link: <strong><a href={this.link}>{this.link}</a></strong></h4>
 				</div>
 			</div>
 		)
 	}
 })
 
-module.exports = SurveyReview 
+module.exports = SurveyReview

@@ -6,16 +6,25 @@ var SurveyQuestion = React.createClass({
 			value: 0
 		}
 	},
-	componentDidMount: function() {
-
-	},
-	reload: function() {
-
-	},
 	onChange: function(e) {
-		this.setState({
-			value: e.target.value
-		})
+		question = this.props.question
+		if (question.type == "text" || question.type == "number") {
+			this.setState({
+				value: e.target.value
+			})
+		}
+		else if (question.type == "toggle") {
+			if (e.target.id == "yes") {
+				this.setState({
+					value: true
+				})
+			} else if (e.target.id == "no"){
+				this.setState({
+					value: false
+				})
+			}
+		}
+
 	},
 	render: function() {
 		var self = this
@@ -24,7 +33,7 @@ var SurveyQuestion = React.createClass({
 			return (
 				<div className="input-group">
 					<span className="input-group-addon">{question.prompt}</span>
-					<input id="answer" type="text" className="form-control" placeholder="type your answer here" />
+					<input id="answer" type="text" className="form-control" placeholder="type your answer here" onChange={this.onChange} />
 				</div>
 			)
 		}
@@ -32,18 +41,21 @@ var SurveyQuestion = React.createClass({
 			return (
 				<div className="input-group">
 					<span className="input-group-addon">{question.prompt}</span>
-					<input id="answer" type="range" min={question.min} max={question.max} step="1" className="form-control" onChange={this.onChange}/>
+					<input id="answer" type="range" min={question.min} max={question.max} step="1" className="form-control" onChange={this.onChange} />
 					<span className="input-group-addon">{this.state.value}</span>
 				</div>
 			)
 		}
 		else if (question.type == "toggle") {
-			return (
-				<div className="input-group">
-					<span className="input-group-addon">{question.prompt}</span>
-					<span className="input-group-addon"><input id="answer" type="checkbox" /></span>
-				</div>
-			)
+				return (
+					<div className="input-group">
+						<span className="input-group-addon">{question.prompt}</span>
+						<span className="input-group-addon">Yes</span>
+						<span className="input-group-addon"><input id="yes" name="answer" type="radio" onChange={this.onChange} /></span>
+						<span className="input-group-addon">No</span>
+						<span className="input-group-addon"><input id="no" name="answer" type="radio" onChange={this.onChange} /></span>
+					</div>
+				)
 		}
 		else if (question.type == "grid") {
 			// implement this later

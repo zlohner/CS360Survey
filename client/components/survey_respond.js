@@ -51,30 +51,6 @@ var SurveyRespond = React.createClass({
 					break
 			}
 		})
-		// self.setState({
-		// 	survey: {
-		// 		_id: 12345,
-		// 		owner: '',
-		// 		published: false,
-		// 		closed: false,
-		// 		name: 'A Quick Questionaire',
-		// 		questions: [
-		// 			{
-		// 				type: 'text',
-		// 				prompt: 'What is your name?'
-		// 			},
-		// 			{
-		// 				type: 'number',
-		// 				prompt: 'How old are you?'
-		// 			},
-		// 			{
-		// 				type: 'check',
-		// 				prompt: 'Do you like bleu cheese?'
-		// 			}
-		// 		]
-		// 	},
-		// 	submitted: false
-		// })
 	},
 	clearErrors: function() {
 		$('#errorMessage').hide()
@@ -97,12 +73,12 @@ var SurveyRespond = React.createClass({
 		e.preventDefault()
 		this.clearErrors()
 		var errors = false
-		var response = [false]
+		var responses = []
 		$.ajax({
 			url: "/api/response/"+self.state.survey._id,
 			type: "POST",
 			contentType: "application/json",
-			data: JSON.stringify({data: response})
+			data: JSON.stringify({data: responses})
 		}).done(function(){
 			self.setState({
 				submitted: true
